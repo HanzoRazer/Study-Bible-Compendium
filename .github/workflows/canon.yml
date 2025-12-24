@@ -1,0 +1,20 @@
+name: Canon Lock
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  canon_lock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Regenerate lock and verify no diff
+        run: |
+          python TOOLS/scripts/canon_lock.py
+          git diff --exit-code CANON/CANON_LOCK.md
