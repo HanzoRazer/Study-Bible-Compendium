@@ -1,0 +1,1268 @@
+Below is an import-ready GitHub Issues JSON file you can upload directly using GitHub’s Issue Import API or tools like gh issue import.
+•	Each issue has a title
+•	body includes description + acceptance criteria
+•	labels are pre-assigned
+•	Issues are grouped implicitly by labels (FTS / Pagination / Performance)
+________________________________________
+📦 production_readiness_v1_1_issues.json
+[
+  {
+    "title": "FTS-1: Detect and Validate SQLite FTS5 Support",
+    "body": "Detect whether the SQLite build supports FTS5 and fail gracefully if not.\n\nAcceptance Criteria:\n- Startup or `status` reports FTS5 availability\n- Clear user-facing error if FTS5 is missing\n- No stack traces exposed",
+    "labels": ["fts", "core", "blocking"]
+  },
+  {
+    "title": "FTS-2: Define FTS Index Schema",
+    "body": "Define which fields are indexed (e.g., verses.text, later notes.body) and create FTS5 virtual tables.\n\nAcceptance Criteria:\n- FTS schema documented\n- Schema version tracked\n- Idempotent creation",
+    "labels": ["fts", "schema"]
+  },
+  {
+    "title": "FTS-3: Implement init-fts Command",
+    "body": "Add `init-fts` CLI command to build the FTS index from existing data.\n\nAcceptance Criteria:\n- Builds index without mutating verse data\n- Progress output for large DBs\n- Safe to re-run",
+    "labels": ["fts", "cli"]
+  },
+  {
+    "title": "FTS-4: Automatic FTS Updates on Import",
+    "body": "Ensure imports keep the FTS index in sync via triggers or post-import rebuild.\n\nAcceptance Criteria:\n- Index updated after import\n- No stale FTS state\n- Behavior documented",
+    "labels": ["fts", "import", "performance"]
+  },
+  {
+    "title": "FTS-5: Implement rebuild-fts Command",
+    "body": "Provide a safe command to rebuild the FTS index.\n\nAcceptance Criteria:\n- Warns about runtime cost\n- Logs start and end\n- Deterministic rebuild",
+    "labels": ["fts", "maintenance"]
+  },
+  {
+    "title": "FTS-6: FTS Query Syntax Handling",
+    "body": "Gracefully handle invalid FTS syntax and document supported patterns.\n\nAcceptance Criteria:\n- Friendly errors for invalid syntax\n- Phrase search supported\n- AND/OR behavior documented",
+    "labels": ["fts", "ux"]
+  },
+  {
+    "title": "FTS-7: Relevance Ordering Verification",
+    "body": "Verify deterministic relevance ordering for FTS queries.\n\nAcceptance Criteria:\n- Same query yields same ordering\n- Ordering documented\n- Stable fallback sort applied",
+    "labels": ["fts", "quality"]
+  },
+  {
+    "title": "PAGE-1: Define Global Pagination Contract",
+    "body": "Standardize pagination flags across commands.\n\nAcceptance Criteria:\n- Pagination model selected (limit/offset or page/page-size)\n- Defaults defined\n- Contract documented",
+    "labels": ["pagination", "design"]
+  },
+  {
+    "title": "PAGE-2: Add Pagination to search Command",
+    "body": "Implement pagination for search results.\n\nAcceptance Criteria:\n- Stable ordering across pages\n- Total hit count reported when feasible\n- Page metadata included",
+    "labels": ["pagination", "fts", "blocking"]
+  },
+  {
+    "title": "PAGE-3: Stable Sorting for Paginated Queries",
+    "body": "Ensure paginated results do not skip or duplicate rows.\n\nAcceptance Criteria:\n- Explicit ORDER BY clause\n- Deterministic tie-breakers\n- Verified across pages",
+    "labels": ["pagination", "bug-risk"]
+  },
+  {
+    "title": "PAGE-4: Pagination for List Commands",
+    "body": "Paginate non-search list commands (e.g., list-translations).\n\nAcceptance Criteria:\n- Same pagination flags everywhere\n- Consistent output format",
+    "labels": ["pagination", "ux"]
+  },
+  {
+    "title": "PAGE-5: Batch Handling for compare",
+    "body": "Support batching for large compare operations.\n\nAcceptance Criteria:\n- No memory exhaustion\n- Batching flags documented",
+    "labels": ["pagination", "performance"]
+  },
+  {
+    "title": "PERF-1: Add Timing Instrumentation",
+    "body": "Measure execution time for major CLI commands.\n\nAcceptance Criteria:\n- Start/end timestamps recorded\n- Duration logged\n- Optional `--timing` flag",
+    "labels": ["performance", "observability", "blocking"]
+  },
+  {
+    "title": "PERF-2: Implement bench Command",
+    "body": "Add a `bench` command to run standardized performance tests.\n\nAcceptance Criteria:\n- Cold vs warm timing\n- Median/p95/max output\n- DB size and verse counts included",
+    "labels": ["performance", "cli"]
+  },
+  {
+    "title": "PERF-3: Define Performance Budgets",
+    "body": "Document performance targets for key operations.\n\nAcceptance Criteria:\n- Budgets defined\n- Measured values recorded\n- Deviations documented",
+    "labels": ["performance", "docs"]
+  },
+  {
+    "title": "PERF-4: Slow Query Detection",
+    "body": "Warn when queries exceed a defined time threshold.\n\nAcceptance Criteria:\n- Threshold configurable\n- Context logged\n- No regressions",
+    "labels": ["performance", "logging"]
+  },
+  {
+    "title": "PERF-5: Query Plan Inspection Support",
+    "body": "Provide `--explain` option for performance debugging.\n\nAcceptance Criteria:\n- Outputs SQLite query plan\n- Clearly dev-only\n- No impact on normal execution",
+    "labels": ["performance", "dev-only"]
+  },
+  {
+    "title": "PERF-6: DB Optimization & Integrity Tools",
+    "body": "Add db-optimize and db-check commands.\n\nAcceptance Criteria:\n- ANALYZE and integrity checks run\n- FTS integrity verified if supported\n- Clear pass/fail output",
+    "labels": ["maintenance", "performance"]
+  }
+]
+________________________________________
+🚀 How to Import
+Option A — GitHub CLI (recommended)
+gh issue import production_readiness_v1_1_issues.json --repo OWNER/REPO
+Option B — GitHub Issue Import API
+•	Use GitHub’s Issue Import endpoint
+•	One issue per POST (this JSON is easily splittable)
+________________________________________
+🔒 Suggested Labels to Pre-Create
+Before importing, create these labels in the repo:
+fts
+pagination
+performance
+blocking
+maintenance
+observability
+ux
+schema
+design
+quality
+docs
+dev-only
+bug-risk
+cli
+core
+import
+logging
+________________________________________
+If you want next, I can:
+•	Generate a GitHub Project board schema
+•	Produce a PR checklist JSON that enforces v1.1 gates
+•	Split this into multiple milestone-scoped JSON files
+Just say which artifact you want.
+
+
+
+“Milestone-scoped JSON files” just means: instead of one big JSON that imports all issues, you get separate JSON files per milestone (or per category inside a milestone) so you can import in smaller, organized batches.
+Why it helps:
+•	You can import FTS first, then Pagination, then Performance.
+•	You can attach each imported batch to a GitHub Milestone (manually, or via a script).
+•	Easier to track progress and avoid “giant blob” issue dumps.
+Two common ways to split
+1.	By category (recommended):
+•	milestone_v1_1_fts.json
+•	milestone_v1_1_pagination.json
+•	milestone_v1_1_performance.json
+2.	By milestone stage (if you later add v1.2, v1.3):
+•	milestone_v1_1_core.json
+•	milestone_v1_1_quality.json
+•	etc.
+________________________________________
+Here are the split JSON files (ready to import)
+1) milestone_v1_1_fts.json
+[
+  {
+    "title": "FTS-1: Detect and Validate SQLite FTS5 Support",
+    "body": "Detect whether the SQLite build supports FTS5 and fail gracefully if not.\n\nAcceptance Criteria:\n- Startup or `status` reports FTS5 availability\n- Clear user-facing error if FTS5 is missing\n- No stack traces exposed",
+    "labels": ["fts", "core", "blocking"]
+  },
+  {
+    "title": "FTS-2: Define FTS Index Schema",
+    "body": "Define which fields are indexed (e.g., verses.text, later notes.body) and create FTS5 virtual tables.\n\nAcceptance Criteria:\n- FTS schema documented\n- Schema version tracked\n- Idempotent creation",
+    "labels": ["fts", "schema"]
+  },
+  {
+    "title": "FTS-3: Implement init-fts Command",
+    "body": "Add `init-fts` CLI command to build the FTS index from existing data.\n\nAcceptance Criteria:\n- Builds index without mutating verse data\n- Progress output for large DBs\n- Safe to re-run",
+    "labels": ["fts", "cli"]
+  },
+  {
+    "title": "FTS-4: Automatic FTS Updates on Import",
+    "body": "Ensure imports keep the FTS index in sync via triggers or post-import rebuild.\n\nAcceptance Criteria:\n- Index updated after import\n- No stale FTS state\n- Behavior documented",
+    "labels": ["fts", "import", "performance"]
+  },
+  {
+    "title": "FTS-5: Implement rebuild-fts Command",
+    "body": "Provide a safe command to rebuild the FTS index.\n\nAcceptance Criteria:\n- Warns about runtime cost\n- Logs start and end\n- Deterministic rebuild",
+    "labels": ["fts", "maintenance"]
+  },
+  {
+    "title": "FTS-6: FTS Query Syntax Handling",
+    "body": "Gracefully handle invalid FTS syntax and document supported patterns.\n\nAcceptance Criteria:\n- Friendly errors for invalid syntax\n- Phrase search supported\n- AND/OR behavior documented",
+    "labels": ["fts", "ux"]
+  },
+  {
+    "title": "FTS-7: Relevance Ordering Verification",
+    "body": "Verify deterministic relevance ordering for FTS queries.\n\nAcceptance Criteria:\n- Same query yields same ordering\n- Ordering documented\n- Stable fallback sort applied",
+    "labels": ["fts", "quality"]
+  }
+]
+________________________________________
+2) milestone_v1_1_pagination.json
+[
+  {
+    "title": "PAGE-1: Define Global Pagination Contract",
+    "body": "Standardize pagination flags across commands.\n\nAcceptance Criteria:\n- Pagination model selected (limit/offset or page/page-size)\n- Defaults defined\n- Contract documented",
+    "labels": ["pagination", "design"]
+  },
+  {
+    "title": "PAGE-2: Add Pagination to search Command",
+    "body": "Implement pagination for search results.\n\nAcceptance Criteria:\n- Stable ordering across pages\n- Total hit count reported when feasible\n- Page metadata included",
+    "labels": ["pagination", "fts", "blocking"]
+  },
+  {
+    "title": "PAGE-3: Stable Sorting for Paginated Queries",
+    "body": "Ensure paginated results do not skip or duplicate rows.\n\nAcceptance Criteria:\n- Explicit ORDER BY clause\n- Deterministic tie-breakers\n- Verified across pages",
+    "labels": ["pagination", "bug-risk"]
+  },
+  {
+    "title": "PAGE-4: Pagination for List Commands",
+    "body": "Paginate non-search list commands (e.g., list-translations).\n\nAcceptance Criteria:\n- Same pagination flags everywhere\n- Consistent output format",
+    "labels": ["pagination", "ux"]
+  },
+  {
+    "title": "PAGE-5: Batch Handling for compare",
+    "body": "Support batching for large compare operations.\n\nAcceptance Criteria:\n- No memory exhaustion\n- Batching flags documented",
+    "labels": ["pagination", "performance"]
+  }
+]
+________________________________________
+3) milestone_v1_1_performance.json
+[
+  {
+    "title": "PERF-1: Add Timing Instrumentation",
+    "body": "Measure execution time for major CLI commands.\n\nAcceptance Criteria:\n- Start/end timestamps recorded\n- Duration logged\n- Optional `--timing` flag",
+    "labels": ["performance", "observability", "blocking"]
+  },
+  {
+    "title": "PERF-2: Implement bench Command",
+    "body": "Add a `bench` command to run standardized performance tests.\n\nAcceptance Criteria:\n- Cold vs warm timing\n- Median/p95/max output\n- DB size and verse counts included",
+    "labels": ["performance", "cli"]
+  },
+  {
+    "title": "PERF-3: Define Performance Budgets",
+    "body": "Document performance targets for key operations.\n\nAcceptance Criteria:\n- Budgets defined\n- Measured values recorded\n- Deviations documented",
+    "labels": ["performance", "docs"]
+  },
+  {
+    "title": "PERF-4: Slow Query Detection",
+    "body": "Warn when queries exceed a defined time threshold.\n\nAcceptance Criteria:\n- Threshold configurable\n- Context logged\n- No regressions",
+    "labels": ["performance", "logging"]
+  },
+  {
+    "title": "PERF-5: Query Plan Inspection Support",
+    "body": "Provide `--explain` option for performance debugging.\n\nAcceptance Criteria:\n- Outputs SQLite query plan\n- Clearly dev-only\n- No impact on normal execution",
+    "labels": ["performance", "dev-only"]
+  },
+  {
+    "title": "PERF-6: DB Optimization & Integrity Tools",
+    "body": "Add db-optimize and db-check commands.\n\nAcceptance Criteria:\n- ANALYZE and integrity checks run\n- FTS integrity verified if supported\n- Clear pass/fail output",
+    "labels": ["maintenance", "performance"]
+  }
+]
+________________________________________
+How you’d use them
+Import each file separately:
+gh issue import milestone_v1_1_fts.json --repo OWNER/REPO
+gh issue import milestone_v1_1_pagination.json --repo OWNER/REPO
+gh issue import milestone_v1_1_performance.json --repo OWNER/REPO
+Then in GitHub, you assign the imported issues to the Production Readiness v1.1 milestone (or to sub-milestones if you create them).
+________________________________________
+If you want, I can also generate a small script that:
+1.	imports each JSON file
+2.	captures the created issue numbers
+3.	automatically assigns them to the v1.1 milestone and applies missing labels.
+
+
+
+Here’s a small, practical script that does exactly what you asked—without relying on gh issue import (because gh issue import doesn’t reliably return created issue numbers).
+Instead, this script:
+1.	Creates missing labels
+2.	Creates (or finds) the “Production Readiness v1.1” milestone
+3.	Creates issues from each JSON file
+4.	Captures created issue numbers/URLs
+5.	Assigns each issue to the milestone
+6.	Writes a local created_issues_v1_1.csv log
+It uses Python + GitHub CLI (gh) so you don’t need to manage tokens manually.
+________________________________________
+✅ Script: import_v1_1_issues.py
+Put this file in your repo root next to:
+•	milestone_v1_1_fts.json
+•	milestone_v1_1_pagination.json
+•	milestone_v1_1_performance.json
+#!/usr/bin/env python3
+"""
+Import milestone-scoped JSON issue files into GitHub:
+- Creates missing labels
+- Creates/fetches milestone "Production Readiness v1.1"
+- Creates issues from JSON (title/body/labels)
+- Assigns each created issue to milestone
+- Captures created issue numbers + URLs into created_issues_v1_1.csv
+
+Requirements:
+- GitHub CLI: gh
+- Auth: gh auth login
+- Python 3.8+
+"""
+
+from __future__ import annotations
+
+import csv
+import json
+import os
+import subprocess
+import sys
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+
+
+MILESTONE_TITLE = "Production Readiness v1.1"
+DEFAULT_LABEL_COLOR = "ededed"  # light gray
+OUTPUT_CSV = "created_issues_v1_1.csv"
+
+JSON_FILES = [
+    "milestone_v1_1_fts.json",
+    "milestone_v1_1_pagination.json",
+    "milestone_v1_1_performance.json",
+]
+
+
+@dataclass
+class CreatedIssue:
+    number: int
+    url: str
+    title: str
+    source_file: str
+
+
+def run(cmd: List[str], *, input_text: Optional[str] = None) -> str:
+    """Run a command, return stdout, raise on error."""
+    proc = subprocess.run(
+        cmd,
+        input=input_text.encode("utf-8") if input_text is not None else None,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"Command failed ({proc.returncode}): {' '.join(cmd)}\n"
+            f"STDOUT:\n{proc.stdout.decode('utf-8', errors='replace')}\n"
+            f"STDERR:\n{proc.stderr.decode('utf-8', errors='replace')}\n"
+        )
+    return proc.stdout.decode("utf-8", errors="replace")
+
+
+def require_gh_auth() -> None:
+    try:
+        out = run(["gh", "auth", "status"])
+        if "Logged in to github.com" not in out:
+            raise RuntimeError("Not authenticated with gh.")
+    except Exception as e:
+        raise RuntimeError(
+            "GitHub CLI not authenticated. Run:\n\n  gh auth login\n"
+        ) from e
+
+
+def parse_repo(repo: Optional[str]) -> str:
+    """Return OWNER/REPO."""
+    if repo:
+        return repo
+    # Try to infer from gh
+    out = run(["gh", "repo", "view", "--json", "nameWithOwner", "-q", ".nameWithOwner"])
+    return out.strip()
+
+
+def gh_api_json(args: List[str], *, input_obj: Optional[Dict[str, Any]] = None) -> Any:
+    """
+    Call gh api and parse JSON response.
+    args example: ["repos/OWNER/REPO/labels", "--method", "GET"]
+    """
+    cmd = ["gh", "api"] + args
+    if input_obj is not None:
+        cmd += ["--input", "-"]
+        raw = run(cmd, input_text=json.dumps(input_obj))
+    else:
+        raw = run(cmd)
+    raw = raw.strip()
+    if not raw:
+        return None
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        # Some gh outputs are not JSON if -q used incorrectly
+        return raw
+
+
+def ensure_labels(repo: str, label_names: List[str]) -> None:
+    # Get existing labels
+    existing = gh_api_json([f"repos/{repo}/labels?per_page=100", "--method", "GET"])
+    existing_names = {lbl["name"] for lbl in (existing or [])}
+
+    for name in sorted(set(label_names)):
+        if name in existing_names:
+            continue
+        print(f"[label] creating: {name}")
+        gh_api_json(
+            [f"repos/{repo}/labels", "--method", "POST"],
+            input_obj={"name": name, "color": DEFAULT_LABEL_COLOR},
+        )
+
+
+def get_or_create_milestone(repo: str, title: str) -> int:
+    # list open milestones
+    milestones = gh_api_json([f"repos/{repo}/milestones?state=open&per_page=100", "--method", "GET"]) or []
+    for ms in milestones:
+        if ms.get("title") == title:
+            return int(ms["number"])
+
+    # create milestone
+    print(f"[milestone] creating: {title}")
+    created = gh_api_json(
+        [f"repos/{repo}/milestones", "--method", "POST"],
+        input_obj={"title": title},
+    )
+    return int(created["number"])
+
+
+def load_issues_from_file(path: Path) -> List[Dict[str, Any]]:
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(data, list):
+        raise ValueError(f"{path} is not a JSON array.")
+    for i, item in enumerate(data):
+        if "title" not in item or "body" not in item:
+            raise ValueError(f"{path}: item {i} missing title/body.")
+        if "labels" in item and not isinstance(item["labels"], list):
+            raise ValueError(f"{path}: item {i} labels must be a list.")
+    return data
+
+
+def create_issue(repo: str, title: str, body: str, labels: List[str], milestone_number: int) -> Tuple[int, str]:
+    created = gh_api_json(
+        [f"repos/{repo}/issues", "--method", "POST"],
+        input_obj={
+            "title": title,
+            "body": body,
+            "labels": labels,
+            "milestone": milestone_number,
+        },
+    )
+    return int(created["number"]), str(created["html_url"])
+
+
+def main() -> int:
+    import argparse
+
+    ap = argparse.ArgumentParser(description="Import v1.1 milestone issue JSON files into GitHub.")
+    ap.add_argument("--repo", help="OWNER/REPO. If omitted, inferred from current repo.", default=None)
+    ap.add_argument("--dry-run", action="store_true", help="Validate + show plan, do not create anything.")
+    ap.add_argument("--files", nargs="*", default=JSON_FILES, help="JSON files to import (default: v1.1 splits).")
+    args = ap.parse_args()
+
+    require_gh_auth()
+    repo = parse_repo(args.repo)
+
+    # Load all issues
+    all_issues: List[Tuple[str, Dict[str, Any]]] = []
+    all_labels: List[str] = []
+    for f in args.files:
+        p = Path(f)
+        if not p.exists():
+            raise FileNotFoundError(f"Missing file: {f}")
+        issues = load_issues_from_file(p)
+        for item in issues:
+            all_issues.append((f, item))
+            all_labels.extend(item.get("labels", []))
+
+    print(f"[plan] repo={repo}")
+    print(f"[plan] milestone='{MILESTONE_TITLE}'")
+    print(f"[plan] files={args.files}")
+    print(f"[plan] issues={len(all_issues)}")
+    print(f"[plan] unique labels={len(set(all_labels))}")
+
+    if args.dry_run:
+        print("[dry-run] No changes made.")
+        return 0
+
+    # Ensure labels + milestone
+    ensure_labels(repo, list(set(all_labels)))
+    milestone_number = get_or_create_milestone(repo, MILESTONE_TITLE)
+    print(f"[milestone] using number: {milestone_number}")
+
+    created: List[CreatedIssue] = []
+    for source_file, item in all_issues:
+        title = item["title"].strip()
+        body = item["body"]
+        labels = item.get("labels", [])
+        print(f"[create] {title} ({source_file})")
+        number, url = create_issue(repo, title, body, labels, milestone_number)
+        created.append(CreatedIssue(number=number, url=url, title=title, source_file=source_file))
+        print(f"  -> #{number} {url}")
+
+    # Write CSV log
+    with open(OUTPUT_CSV, "w", newline="", encoding="utf-8") as fp:
+        w = csv.writer(fp)
+        w.writerow(["issue_number", "url", "title", "source_file"])
+        for ci in created:
+            w.writerow([ci.number, ci.url, ci.title, ci.source_file])
+
+    print(f"[done] created {len(created)} issues")
+    print(f"[done] log written: {OUTPUT_CSV}")
+    return 0
+
+
+if __name__ == "__main__":
+    try:
+        raise SystemExit(main())
+    except Exception as e:
+        print(f"[error] {e}", file=sys.stderr)
+        raise
+________________________________________
+How to run it
+From your repo folder:
+gh auth login
+python import_v1_1_issues.py --repo OWNER/REPO
+Optional dry-run:
+python import_v1_1_issues.py --repo OWNER/REPO --dry-run
+It will produce:
+•	created_issues_v1_1.csv (numbers + URLs)
+________________________________________
+What about “applies missing labels”?
+This script:
+•	Reads every labels: [] entry from your JSON
+•	Checks which labels exist in the repo
+•	Creates any missing labels automatically (default gray color)
+•	Applies them when creating each issue
+________________________________________
+If you want, I can also provide a bash+jq version (no Python), but the Python version is more reliable across Windows + PowerShell environments.
+
+
+
+
+Below are two importable-ish JSON artifacts you can drop into your repo as “source of truth” and drive automation from:
+1.	GitHub Project board schema (Projects v2) — a declarative schema your scripts can use to create/configure a Project (fields, views, workflow states, and automation intent).
+2.	PR checklist JSON enforcing v1.1 gates — a machine-checkable checklist that a GitHub Action (or your own CI) can enforce.
+Important note: GitHub Projects v2 doesn’t accept a single “schema import JSON” natively. The JSON below is a schema spec you can apply using gh api graphql (or a small script). It’s still extremely useful because it standardizes the board and makes automation deterministic.
+________________________________________
+1) GitHub Project Board Schema (Projects v2) — project_schema_pr_v1_1.json
+{
+  "project": {
+    "title": "Production Readiness v1.1",
+    "description": "FTS5 + Pagination + Performance Metrics hardening for Study Bible Compendium.",
+    "visibility": "private",
+    "owner_type": "repository",
+    "templates": ["roadmap", "kanban"]
+  },
+  "fields": [
+    {
+      "name": "Status",
+      "type": "single_select",
+      "options": [
+        "Backlog",
+        "Ready",
+        "In Progress",
+        "In Review",
+        "Blocked",
+        "Done"
+      ],
+      "default": "Backlog"
+    },
+    {
+      "name": "Workstream",
+      "type": "single_select",
+      "options": [
+        "FTS",
+        "Pagination",
+        "Performance",
+        "Maintenance",
+        "Docs",
+        "Infra"
+      ]
+    },
+    {
+      "name": "Priority",
+      "type": "single_select",
+      "options": [
+        "P0-Blocking",
+        "P1-High",
+        "P2-Medium",
+        "P3-Low"
+      ]
+    },
+    {
+      "name": "Gate",
+      "type": "single_select",
+      "options": [
+        "FTS Gate",
+        "Pagination Gate",
+        "Performance Gate",
+        "Docs Gate",
+        "Release Gate"
+      ]
+    },
+    {
+      "name": "Risk",
+      "type": "single_select",
+      "options": [
+        "Data Corruption",
+        "Regression",
+        "Performance",
+        "UX/Operability",
+        "None"
+      ]
+    },
+    {
+      "name": "Effort",
+      "type": "single_select",
+      "options": [
+        "XS (≤1h)",
+        "S (½ day)",
+        "M (1–2 days)",
+        "L (3–5 days)",
+        "XL (≥1 week)"
+      ]
+    },
+    {
+      "name": "Target Version",
+      "type": "single_select",
+      "options": [
+        "v1.1",
+        "v1.1.1",
+        "v1.2"
+      ],
+      "default": "v1.1"
+    },
+    {
+      "name": "Bench Evidence",
+      "type": "text",
+      "description": "Link to docs/performance.md section or CI artifact URL showing benchmark before/after."
+    },
+    {
+      "name": "Acceptance Verified",
+      "type": "single_select",
+      "options": [
+        "No",
+        "Partial",
+        "Yes"
+      ],
+      "default": "No"
+    }
+  ],
+  "views": [
+    {
+      "name": "Kanban",
+      "type": "board",
+      "group_by": "Status",
+      "sort": ["Priority", "Workstream"],
+      "filters": [
+        { "field": "Target Version", "op": "equals", "value": "v1.1" }
+      ]
+    },
+    {
+      "name": "By Workstream",
+      "type": "board",
+      "group_by": "Workstream",
+      "sort": ["Priority", "Status"],
+      "filters": [
+        { "field": "Target Version", "op": "equals", "value": "v1.1" }
+      ]
+    },
+    {
+      "name": "Release Gate Dashboard",
+      "type": "table",
+      "columns": [
+        "Title",
+        "Status",
+        "Workstream",
+        "Priority",
+        "Gate",
+        "Acceptance Verified",
+        "Bench Evidence"
+      ],
+      "filters": [
+        { "field": "Gate", "op": "equals", "value": "Release Gate" }
+      ]
+    },
+    {
+      "name": "Blocked Items",
+      "type": "table",
+      "columns": ["Title", "Status", "Workstream", "Priority", "Risk"],
+      "filters": [
+        { "field": "Status", "op": "equals", "value": "Blocked" }
+      ]
+    }
+  ],
+  "automation_intent": {
+    "issue_to_project": {
+      "enabled": true,
+      "trigger": "issue_opened",
+      "rules": [
+        {
+          "if": { "labels_any": ["fts"] },
+          "set": {
+            "Workstream": "FTS",
+            "Gate": "FTS Gate"
+          }
+        },
+        {
+          "if": { "labels_any": ["pagination"] },
+          "set": {
+            "Workstream": "Pagination",
+            "Gate": "Pagination Gate"
+          }
+        },
+        {
+          "if": { "labels_any": ["performance"] },
+          "set": {
+            "Workstream": "Performance",
+            "Gate": "Performance Gate"
+          }
+        },
+        {
+          "if": { "labels_any": ["docs"] },
+          "set": {
+            "Workstream": "Docs",
+            "Gate": "Docs Gate"
+          }
+        },
+        {
+          "if": { "labels_any": ["blocking"] },
+          "set": {
+            "Priority": "P0-Blocking"
+          }
+        }
+      ],
+      "defaults": {
+        "Status": "Backlog",
+        "Priority": "P2-Medium",
+        "Risk": "None",
+        "Effort": "M (1–2 days)",
+        "Target Version": "v1.1",
+        "Acceptance Verified": "No"
+      }
+    },
+    "pr_linkage": {
+      "enabled": true,
+      "trigger": "pr_merged",
+      "rules": [
+        {
+          "if": { "closes_issue": true },
+          "set_issue_fields": {
+            "Status": "Done",
+            "Acceptance Verified": "Yes"
+          }
+        }
+      ]
+    }
+  }
+}
+How you use it (typical workflow):
+•	Store this in docs/project/project_schema_pr_v1_1.json
+•	Write a small script that:
+o	creates/updates the Project
+o	creates missing fields/options
+o	sets up your default views
+o	optionally adds automation rules (where supported)
+________________________________________
+2) PR Checklist JSON Enforcing v1.1 Gates — pr_checklist_v1_1.json
+This is a policy file your CI can enforce. It encodes:
+•	required PR template checklist boxes
+•	required evidence files/sections
+•	required label/routing rules
+•	required bench deltas (when the PR touches performance/search code)
+{
+  "version": "1.1",
+  "name": "Production Readiness v1.1 PR Gates",
+  "applies_to": {
+    "branches": ["main"],
+    "paths_watch": [
+      "sbc/**",
+      "schema/**",
+      "compendium.py",
+      "cli/**",
+      "docs/**"
+    ]
+  },
+  "required_pr_labels_any_of": [
+    "fts",
+    "pagination",
+    "performance",
+    "maintenance",
+    "docs"
+  ],
+  "required_pr_template_checkboxes": [
+    {
+      "id": "chk-acceptance",
+      "text": "Acceptance criteria in linked issues are fully met",
+      "required": true
+    },
+    {
+      "id": "chk-no-stacktraces",
+      "text": "User-facing errors are friendly (no stack traces for expected failures)",
+      "required": true
+    },
+    {
+      "id": "chk-logging",
+      "text": "Relevant operations are logged with timing and context",
+      "required": true
+    },
+    {
+      "id": "chk-tests",
+      "text": "Tests added/updated for this change (or justified if not applicable)",
+      "required": true
+    }
+  ],
+  "gate_rules": [
+    {
+      "id": "gate-fts-required",
+      "when": {
+        "labels_any": ["fts"],
+        "changed_paths_any": ["sbc/search.py", "sbc/db.py", "schema/**", "compendium.py", "cli/**"]
+      },
+      "require": {
+        "files_exist_any": ["docs/fts.md", "schema/fts.sql"],
+        "tests_match_any": ["tests/test_fts*.py", "tests/test_search*.py"],
+        "pr_template_checkboxes_checked": ["chk-acceptance", "chk-no-stacktraces", "chk-tests"]
+      }
+    },
+    {
+      "id": "gate-pagination-required",
+      "when": {
+        "labels_any": ["pagination"],
+        "changed_paths_any": ["sbc/search.py", "compendium.py", "cli/**"]
+      },
+      "require": {
+        "docs_contains": [
+          { "file": "docs/cli.md", "must_include": "--limit" },
+          { "file": "docs/cli.md", "must_include": "--offset" }
+        ],
+        "tests_match_any": ["tests/test_pagination*.py", "tests/test_search*.py"],
+        "pr_template_checkboxes_checked": ["chk-acceptance", "chk-tests"]
+      }
+    },
+    {
+      "id": "gate-performance-required",
+      "when": {
+        "labels_any": ["performance"],
+        "changed_paths_any": ["sbc/**", "compendium.py", "cli/**"]
+      },
+      "require": {
+        "files_exist_any": ["docs/performance.md", "sbc/bench.py"],
+        "pr_template_checkboxes_checked": ["chk-acceptance", "chk-logging", "chk-tests"]
+      }
+    },
+    {
+      "id": "gate-bench-evidence-on-search_changes",
+      "when": {
+        "changed_paths_any": ["sbc/search.py", "schema/fts.sql", "sbc/db.py"],
+        "labels_any": ["fts", "performance", "pagination"]
+      },
+      "require": {
+        "docs_contains": [
+          { "file": "docs/performance.md", "must_include": "Bench Results" }
+        ],
+        "artifact_or_link_present": {
+          "one_of": [
+            { "type": "file", "path_prefix": "docs/perf_runs/" },
+            { "type": "text_in_pr_body", "pattern": "Bench Evidence:" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "gate-release-gate-blockers",
+      "when": {
+        "milestone": "Production Readiness v1.1"
+      },
+      "require": {
+        "no_open_issues_with_labels": ["blocking"],
+        "no_open_issues_with_prefixes": ["FTS-", "PAGE-", "PERF-"]
+      }
+    }
+  ],
+  "recommended_pr_body_sections": [
+    "Summary",
+    "Linked Issues",
+    "Acceptance Criteria",
+    "Bench Evidence",
+    "Risk / Rollback"
+  ],
+  "outputs": {
+    "ci_annotations": true,
+    "fail_on_missing": true,
+    "report_format": "markdown"
+  }
+}
+What “enforces” means here
+This JSON is designed so a CI job can:
+•	check PR body for the required checked boxes
+•	verify required labels exist
+•	verify certain files/docs exist when certain labels/paths are involved
+•	ensure bench evidence is attached when search/perf code changes
+If you want, I can also generate the matching GitHub Action workflow (.github/workflows/pr-gates.yml) that reads this JSON and fails the PR when gates aren’t met.
+
+
+Absolutely. Below is a Compendium-ready “Core Sanctification Passage” insert for Romans 8:18–30, plus a direct SQLite schema + insert script (SQL) for verse_notes and greek_margins that you can run immediately.
+________________________________________
+1) Compendium Insert: Core Sanctification Passage
+Core Sanctification Passage ID
+SANCT_CORE_ROM_008_018_030
+Title
+Romans 8:18–30 — Sanctification Through Groaning, Help, and Conformity
+Compendium Summary (for your “Core Passages” index)
+Romans 8:18–30 frames sanctification as Spirit-governed transformation toward Christ’s image. Creation groans, believers groan, and the Spirit intercedes within weakness according to God’s will—ensuring that suffering, prayer, hope, and providence converge toward conformity to the Son and final glory.
+Primary Themes
+•	Conformity to Christ (image formation)
+•	Spirit-aided weakness (prayer & intercession)
+•	Hope-based endurance (waiting with patience)
+•	Providence toward good (defined by God’s purpose)
+________________________________________
+2) SQLite Schema: verse_notes + greek_margins
+Assumptions (aligned to your Compendium direction):
+•	You have a canonical verse table like verses(id, ref, book, chapter, verse, text, ...) or similar.
+•	We store notes keyed to a verse_id (foreign key into verses.id).
+•	Notes are “Midrash-style” blocks (your formatting).
+•	Greek margins are separate rows (one per key verb/term).
+Migration SQL (safe + minimal)
+PRAGMA foreign_keys=ON;
+
+-- Verse notes: Midrash entries, sanctification tags, ordering, etc.
+CREATE TABLE IF NOT EXISTS verse_notes (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  verse_id INTEGER NOT NULL,
+  note_kind TEXT NOT NULL DEFAULT 'midrash',   -- e.g. 'midrash', 'summary', 'doctrine', 'application'
+  unit_id TEXT,                               -- e.g. SANCT_CORE_ROM_008_018_030
+  title TEXT,                                 -- optional header for grouped notes
+  note_md TEXT NOT NULL,                      -- markdown-like content
+  tags TEXT,                                  -- comma-separated tags for now (or JSON later)
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  updated_at TEXT,
+  FOREIGN KEY (verse_id) REFERENCES verses(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_verse_notes_verse_id ON verse_notes(verse_id);
+CREATE INDEX IF NOT EXISTS idx_verse_notes_unit_id ON verse_notes(unit_id);
+
+-- Greek margins: small parsing entries attached to verse
+CREATE TABLE IF NOT EXISTS greek_margins (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  verse_id INTEGER NOT NULL,
+  unit_id TEXT,
+  lemma_greek TEXT NOT NULL,         -- e.g. λογίζομαι
+  translit TEXT,                     -- e.g. logizomai
+  morph TEXT NOT NULL,               -- e.g. pres mid ind
+  gloss TEXT,                        -- short meaning
+  note_md TEXT,                      -- short note / force
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  FOREIGN KEY (verse_id) REFERENCES verses(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_greek_margins_verse_id ON greek_margins(verse_id);
+CREATE INDEX IF NOT EXISTS idx_greek_margins_unit_id ON greek_margins(unit_id);
+________________________________________
+3) Direct Insert SQL for Romans 8:18–30 (Notes + Greek Margins)
+This version uses a common Compendium pattern:
+•	We resolve each verse’s verse_id by ref (example: "Romans 8:18").
+•	If your verse reference formatting differs, adjust the WHERE v.ref = ... lines.
+A) Insert Midrash Notes (verse-per-line unit)
+PRAGMA foreign_keys=ON;
+
+-- Helper: change this if your verses.ref format is different
+-- (e.g., "Rom 8:18" vs "Romans 8:18")
+-- We assume: verses.ref = "Romans 8:18"
+
+-- Romans 8:18
+INSERT INTO verse_notes (verse_id, note_kind, unit_id, title, note_md, tags, sort_order)
+SELECT v.id, 'midrash', 'SANCT_CORE_ROM_008_018_030', 'Romans 8:18–30 — Unified Midrash Unit',
+'**Midrash:** Suffering is weighed, not dismissed. Glory is revealed *to and in* God''s children—personal, not merely scenic.',
+'sanctification,romans8,glory,suffering', 10
+FROM verses v WHERE v.ref = 'Romans 8:18';
+
+-- Romans 8:19
+INSERT INTO verse_notes (verse_id, note_kind, unit_id, note_md, tags, sort_order)
+SELECT v.id, 'midrash', 'SANCT_CORE_ROM_008_018_030',
+'**Midrash:** Creation waits for the revealing of sons. Redemption is human-centered before it becomes cosmic—creation follows transformed heirs.',
+'sanctification,creation,sons,revealing', 20
+FROM verses v WHERE v.ref = 'Romans 8:19';
+
+-- Romans 8:20
+INSERT INTO verse_notes (verse_id, note_kind, unit_id, note_md, tags, sort_order)
+SELECT v.id, 'midrash', 'SANCT_CORE_ROM_008_018_030',
+'**Midrash:** Futility was imposed with a future in view. Even judgment carries a redemptive trajectory—*in hope*.',
+'sanctification,futility,hope', 30
+FROM verses v WHERE v.ref = 'Romans 8:20';
+
+-- Romans 8:21
+INSERT INTO verse_notes (verse_id, note_kind, unit_id, note_md, tags, sort_order)
+SELECT v.id, 'midrash', 'SANCT_CORE_ROM_008_018_030',
+'**Midrash:** Creation''s freedom is tethered to the freedom of glorified children. The world is healed as sons are restored.',
+'sanctification,freedom,glory,children', 40
+FROM verses v WHERE v.ref = 'Romans 8:21';
+
+-- Romans 8:22
+INSERT INTO verse_notes (verse_id, note_kind, unit_id, note_md, tags, sort_order)
+SELECT v.id, 'midrash', 'SANCT_CORE_ROM_008_018_030',
+'**Midrash:** Groaning is labor, not defeat. The metaphor promises birth—God is bringing something forth.',
+'sanctification,groaning,childbirth', 50
+FROM verses v WHERE v.ref = 'Romans 8:22';
+
+-- Romans 8:23
+INSERT INTO verse_notes (verse_id, note_kind, unit_id, note_md, tags, sort_order)
+SELECT v.id, 'midrash', 'SANCT_CORE_ROM_008_018_030',
+'**Midrash:** Believers groan inwardly because adoption is real yet unfinished in manifestation. The Spirit produces longing for completion—redemption of the body.',
+'sanctification,adoption,groaning,redemption', 60
+FROM verses v WHERE v.ref = 'Romans 8:23';
+
+-- Romans 8:24
+INSERT INTO verse_notes (verse_id, note_kind, unit_id, note_md, tags, sort_order)
+SELECT v.id, 'midrash', 'SANCT_CORE_ROM_008_018_030',
+'**Midrash:** Hope lives where sight has not yet arrived. Salvation includes unfinished expectation—faith waits without demanding immediate relief.',
+'sanctification,hope,faith', 70
+FROM verses v WHERE v.ref = 'Romans 8:24';
+
+-- Romans 8:25
+INSERT INTO verse_notes (verse_id, note_kind, unit_id, note_md, tags, sort_order)
+SELECT v.id, 'midrash', 'SANCT_CORE_ROM_008_018_030',
+'**Midrash:** Patience is endurance with trust. Waiting here is active—holding steady under God''s timing.',
+'sanctification,patience,endurance', 80
+FROM verses v WHERE v.ref = 'Romans 8:25';
+
+-- Romans 8:26
+INSERT INTO verse_notes (verse_id, note_kind, unit_id, note_md, tags, sort_order)
+SELECT v.id, 'midrash', 'SANCT_CORE_ROM_008_018_030',
+'**Midrash:** Weakness is the entry point of divine help. The Spirit does not shame inability—He joins it.',
+'sanctification,spirit,weakness,prayer', 90
+FROM verses v WHERE v.ref = 'Romans 8:26';
+
+-- Romans 8:26 (cont. intercession)
+INSERT INTO verse_notes (verse_id, note_kind, unit_id, note_md, tags, sort_order)
+SELECT v.id, 'midrash', 'SANCT_CORE_ROM_008_018_030',
+'**Midrash:** When words fail, the Spirit intercedes with groanings too deep for speech—Spirit-formed petition where language cannot reach.',
+'sanctification,intercession,groaning', 95
+FROM verses v WHERE v.ref = 'Romans 8:26';
+
+-- Romans 8:27
+INSERT INTO verse_notes (verse_id, note_kind, unit_id, note_md, tags, sort_order)
+SELECT v.id, 'midrash', 'SANCT_CORE_ROM_008_018_030',
+'**Midrash:** The Father who searches hearts knows the mind of the Spirit. Intercession is aligned “according to God”—the Trinity receives prayers already shaped by divine will.',
+'sanctification,trinity,intercession,will-of-god', 100
+FROM verses v WHERE v.ref = 'Romans 8:27';
+
+-- Romans 8:28
+INSERT INTO verse_notes (verse_id, note_kind, unit_id, note_md, tags, sort_order)
+SELECT v.id, 'midrash', 'SANCT_CORE_ROM_008_018_030',
+'**Midrash:** “Good” is defined by purpose, not comfort. Providence is sanctifying—events converge toward God''s intended end.',
+'sanctification,providence,good,purpose', 110
+FROM verses v WHERE v.ref = 'Romans 8:28';
+
+-- Romans 8:29
+INSERT INTO verse_notes (verse_id, note_kind, unit_id, note_md, tags, sort_order)
+SELECT v.id, 'midrash', 'SANCT_CORE_ROM_008_018_030',
+'**Midrash:** The goal is conformity to the Son—resemblance, not mere rescue. Sanctification is image-formation.',
+'sanctification,image-of-christ,conformity', 120
+FROM verses v WHERE v.ref = 'Romans 8:29';
+
+-- Romans 8:30
+INSERT INTO verse_notes (verse_id, note_kind, unit_id, note_md, tags, sort_order)
+SELECT v.id, 'midrash', 'SANCT_CORE_ROM_008_018_030',
+'**Midrash:** The chain is unbroken—called, justified, glorified. Glorification is spoken as certain: God completes what He initiates.',
+'sanctification,calling,justification,glorification', 130
+FROM verses v WHERE v.ref = 'Romans 8:30';
+
+-- Unit-level summary note (attach to v.30 so it shows at the end of the unit)
+INSERT INTO verse_notes (verse_id, note_kind, unit_id, note_md, tags, sort_order)
+SELECT v.id, 'summary', 'SANCT_CORE_ROM_008_018_030',
+'**Unit Summary:** Creation groans, believers groan, and the Spirit groans within believers. Through weakness, waiting, and suffering, the Spirit forms the image of the Son. The Father receives intercession aligned to His will, ensuring that everything moves toward Christlikeness and final glory.',
+'sanctification,unit-summary,romans8', 999
+FROM verses v WHERE v.ref = 'Romans 8:30';
+B) Insert Greek Verb Parsing Margins
+PRAGMA foreign_keys=ON;
+
+-- Romans 8:18
+INSERT INTO greek_margins (verse_id, unit_id, lemma_greek, translit, morph, gloss, note_md, sort_order)
+SELECT v.id, 'SANCT_CORE_ROM_008_018_030', 'λογίζομαι', 'logizomai', 'present middle indicative', 'reckon / consider',
+'Settled evaluation (not mood): Paul weighs suffering against coming glory.', 10
+FROM verses v WHERE v.ref = 'Romans 8:18';
+
+-- Romans 8:19
+INSERT INTO greek_margins (verse_id, unit_id, lemma_greek, translit, morph, gloss, note_md, sort_order)
+SELECT v.id, 'SANCT_CORE_ROM_008_018_030', 'ἀπεκδέχομαι', 'apekdechomai', 'present middle indicative', 'wait eagerly',
+'Strained anticipation: creation leans forward toward the revealing of sons.', 20
+FROM verses v WHERE v.ref = 'Romans 8:19';
+
+-- Romans 8:20
+INSERT INTO greek_margins (verse_id, unit_id, lemma_greek, translit, morph, gloss, note_md, sort_order)
+SELECT v.id, 'SANCT_CORE_ROM_008_018_030', 'ὑποτάσσω', 'hypotasso', 'aorist passive indicative', 'subject / place under',
+'Creation “was subjected” (passive): imposed condition, not voluntary.', 30
+FROM verses v WHERE v.ref = 'Romans 8:20';
+
+-- Romans 8:21
+INSERT INTO greek_margins (verse_id, unit_id, lemma_greek, translit, morph, gloss, note_md, sort_order)
+SELECT v.id, 'SANCT_CORE_ROM_008_018_030', 'ἐλευθερόω', 'eleutheroo', 'future passive indicative', 'set free / liberate',
+'Future liberation: the created order participates in the children’s freedom.', 40
+FROM verses v WHERE v.ref = 'Romans 8:21';
+
+-- Romans 8:22
+INSERT INTO greek_margins (verse_id, unit_id, lemma_greek, translit, morph, gloss, note_md, sort_order)
+SELECT v.id, 'SANCT_CORE_ROM_008_018_030', 'συστενάζω', 'systenazo', 'present active indicative', 'groan together',
+'Corporate groaning: creation shares one laboring ache.', 50
+FROM verses v WHERE v.ref = 'Romans 8:22';
+
+-- Romans 8:23
+INSERT INTO greek_margins (verse_id, unit_id, lemma_greek, translit, morph, gloss, note_md, sort_order)
+SELECT v.id, 'SANCT_CORE_ROM_008_018_030', 'ἀπεκδέχομαι', 'apekdechomai', 'present middle participle', 'await eagerly',
+'Believers share creation’s posture—eager waiting for bodily redemption.', 60
+FROM verses v WHERE v.ref = 'Romans 8:23';
+
+-- Romans 8:24
+INSERT INTO greek_margins (verse_id, unit_id, lemma_greek, translit, morph, gloss, note_md, sort_order)
+SELECT v.id, 'SANCT_CORE_ROM_008_018_030', 'σῴζω', 'sozo', 'aorist passive indicative', 'save / rescue',
+'Decisive saving act, with ongoing hope for completion.', 70
+FROM verses v WHERE v.ref = 'Romans 8:24';
+
+-- Romans 8:25
+INSERT INTO greek_margins (verse_id, unit_id, lemma_greek, translit, morph, gloss, note_md, sort_order)
+SELECT v.id, 'SANCT_CORE_ROM_008_018_030', 'ἀπεκδέχομαι', 'apekdechomai', 'present middle indicative', 'wait eagerly',
+'Present tense: hope keeps waiting active, not idle.', 80
+FROM verses v WHERE v.ref = 'Romans 8:25';
+
+-- Romans 8:26 (Spirit helps)
+INSERT INTO greek_margins (verse_id, unit_id, lemma_greek, translit, morph, gloss, note_md, sort_order)
+SELECT v.id, 'SANCT_CORE_ROM_008_018_030', 'συναντιλαμβάνομαι', 'synantilambanomai', 'present middle indicative', 'take hold together with',
+'The Spirit joins the burden; He does not merely observe or replace the believer.', 90
+FROM verses v WHERE v.ref = 'Romans 8:26';
+
+-- Romans 8:26 (Spirit intercedes)
+INSERT INTO greek_margins (verse_id, unit_id, lemma_greek, translit, morph, gloss, note_md, sort_order)
+SELECT v.id, 'SANCT_CORE_ROM_008_018_030', 'ὑπερεντυγχάνω', 'hyperentynchano', 'present active indicative', 'intercede on behalf of',
+'Advocacy language: Spirit-formed petition where words fail.', 95
+FROM verses v WHERE v.ref = 'Romans 8:26';
+
+-- Romans 8:27
+INSERT INTO greek_margins (verse_id, unit_id, lemma_greek, translit, morph, gloss, note_md, sort_order)
+SELECT v.id, 'SANCT_CORE_ROM_008_018_030', 'ἐντυγχάνω', 'entynchano', 'present active indicative', 'appeal / petition',
+'Intercession “according to God” (aligned to divine will, not human guesswork).', 100
+FROM verses v WHERE v.ref = 'Romans 8:27';
+
+-- Romans 8:28
+INSERT INTO greek_margins (verse_id, unit_id, lemma_greek, translit, morph, gloss, note_md, sort_order)
+SELECT v.id, 'SANCT_CORE_ROM_008_018_030', 'συνεργέω', 'synergeo', 'present active indicative', 'work together',
+'Providence is collaborative convergence: events are not isolated.', 110
+FROM verses v WHERE v.ref = 'Romans 8:28';
+
+-- Romans 8:29
+INSERT INTO greek_margins (verse_id, unit_id, lemma_greek, translit, morph, gloss, note_md, sort_order)
+SELECT v.id, 'SANCT_CORE_ROM_008_018_030', 'προγινώσκω', 'proginosko', 'aorist active indicative', 'know beforehand',
+'Relational knowing that precedes purpose and calling.', 120
+FROM verses v WHERE v.ref = 'Romans 8:29';
+
+INSERT INTO greek_margins (verse_id, unit_id, lemma_greek, translit, morph, gloss, note_md, sort_order)
+SELECT v.id, 'SANCT_CORE_ROM_008_018_030', 'προορίζω', 'proorizo', 'aorist active indicative', 'predestine / mark out',
+'Goal-oriented: conformed to the Son’s image (sanctification’s destination).', 125
+FROM verses v WHERE v.ref = 'Romans 8:29';
+
+-- Romans 8:30 (golden chain verbs)
+INSERT INTO greek_margins (verse_id, unit_id, lemma_greek, translit, morph, gloss, note_md, sort_order)
+SELECT v.id, 'SANCT_CORE_ROM_008_018_030', 'καλέω', 'kaleo', 'aorist active indicative', 'call',
+'Aorist sequence: God’s action presented as decisive and sure.', 130
+FROM verses v WHERE v.ref = 'Romans 8:30';
+
+INSERT INTO greek_margins (verse_id, unit_id, lemma_greek, translit, morph, gloss, note_md, sort_order)
+SELECT v.id, 'SANCT_CORE_ROM_008_018_030', 'δικαιόω', 'dikaioo', 'aorist active indicative', 'justify',
+'Declared righteous—grounds the sanctifying transformation.', 135
+FROM verses v WHERE v.ref = 'Romans 8:30';
+
+INSERT INTO greek_margins (verse_id, unit_id, lemma_greek, translit, morph, gloss, note_md, sort_order)
+SELECT v.id, 'SANCT_CORE_ROM_008_018_030', 'δοξάζω', 'doxazo', 'aorist active indicative', 'glorify',
+'Spoken as completed: certainty of God’s finishing work.', 140
+FROM verses v WHERE v.ref = 'Romans 8:30';
+________________________________________
+4) Optional: Add a “Core Passages” Registry Table (Recommended)
+If you want this passage to appear in a top-level Compendium index (high value for navigation/search), add:
+CREATE TABLE IF NOT EXISTS core_passages (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  unit_id TEXT NOT NULL UNIQUE,                -- SANCT_CORE_ROM_008_018_030
+  category TEXT NOT NULL,                      -- sanctification, trinity, prayer, etc.
+  title TEXT NOT NULL,
+  range_ref TEXT NOT NULL,                     -- "Romans 8:18–30"
+  summary_md TEXT NOT NULL,
+  tags TEXT,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+INSERT OR IGNORE INTO core_passages (unit_id, category, title, range_ref, summary_md, tags)
+VALUES (
+  'SANCT_CORE_ROM_008_018_030',
+  'sanctification',
+  'Romans 8:18–30 — Sanctification Through Groaning, Help, and Conformity',
+  'Romans 8:18–30',
+  'Romans 8:18–30 frames sanctification as Spirit-governed transformation toward Christ’s image. Creation groans, believers groan, and the Spirit intercedes within weakness according to God’s will—ensuring that suffering, prayer, hope, and providence converge toward conformity to the Son and final glory.',
+  'sanctification,romans8,holy-spirit,prayer,conformity,image-of-christ'
+);
+________________________________________
+Next Build Step Options (pick one phrase and I’ll output it fully)
+1.	“Ship CLI command” → I’ll write a sbc/core_passages.py + CLI add-core-passage that executes the inserts safely (idempotent, checks verse refs exist).
+2.	“Ship PDF renderer” → I’ll wire a PDF layout that prints verse per line + margin Greek cleanly (your Compendium priority).
+3.	“Wire Strong’s” → Extend greek_margins with Strong’s fields and create auto-linking in PDF.
+Just tell me which one you want next.
+
+
+Nice — you’ve basically pasted the left margin “Greek parsing” row for Romans 8:26a. Here’s how to read it, how it fits the Midrash unit, and how I’d store it in your greek_margins table.
+Romans 8:26a — phrase-level read (with your tokens)
+Ὡσαύτως δὲ καὶ τὸ Πνεῦμα
+•	Ὡσαύτως (Hōsautōs) — “likewise / in the same way” (Adv)
+Connects this to the prior section: waiting/hope/patience (8:23–25).
+The Spirit’s help is the “likewise” answer to the believer’s weakness while waiting.
+•	δὲ (de) — connective “and / now / but” (Conj)
+Soft transition (often not strongly adversative).
+•	καὶ (kai) — “also” (Conj)
+Emphasis: not only creation groans, not only we groan… the Spirit also…
+•	τὸ Πνεῦμα (to Pneuma) — “the Spirit” (Art-NNS + N-NNS)
+Neuter noun with article; context makes it the Holy Spirit.
+συναντιλαμβάνεται τῇ ἀσθενείᾳ ἡμῶν
+•	συναντιλαμβάνεται (synantilambanetai) — “joins to help / takes hold together with”
+Your tag: V-PIM/P-3S ≈ Present Indicative Middle (or middle/passive form), 3rd singular
+Sense: the Spirit co-lifts the burden; He doesn’t merely “assist from the sidelines.”
+•	τῇ ἀσθενείᾳ (tē astheneia) — “the weakness” (Art-DFS + N-DFS)
+Dative here is key: the Spirit helps with respect to / in the sphere of our weakness.
+•	ἡμῶν (hēmōn) — “of us / our” (Gen 1st plural)
+Not “a weakness out there” — our weakness.
+•	You ended at τὸ (Art-ANS) — that’s the start of the next clause (τὸ γὰρ τί…), which introduces why we need help: we don’t know what to pray as we ought.
+________________________________________
+How this locks into your Midrash unit (8:18–30)
+Midrash anchor:
+“Likewise” ties the Spirit’s help directly to the groaning / waiting section.
+The Spirit’s ministry is not mainly to remove the wait, but to carry us through it—especially at the prayer level.
+Creation groans (v22) → we groan (v23) → Spirit also (Ὡσαύτως…καὶ) joins our weakness (v26).
+________________________________________
+How I’d store this in greek_margins (phrase-level)
+If you want margins to appear like an interlinear “stack” per verse, I recommend one row per phrase, not one row per word, so it stays readable in PDF and UI.
+Example inserts for Romans 8:26 (assuming verses.ref = 'Romans 8:26'):
+-- Romans 8:26a (connector phrase)
+INSERT INTO greek_margins (verse_id, unit_id, lemma_greek, translit, morph, gloss, note_md, sort_order)
+SELECT v.id, 'SANCT_CORE_ROM_008_018_030',
+'Ὡσαύτως δὲ καὶ', 'hōsautōs de kai', 'Adv + Conj + Conj', 'likewise / now / also',
+'Links Spirit-help to the prior groaning/waiting context (vv.23–25): not only we groan—**the Spirit also** enters the tension.',
+10
+FROM verses v WHERE v.ref='Romans 8:26';
+
+-- Romans 8:26a (subject)
+INSERT INTO greek_margins (verse_id, unit_id, lemma_greek, translit, morph, gloss, note_md, sort_order)
+SELECT v.id, 'SANCT_CORE_ROM_008_018_030',
+'τὸ Πνεῦμα', 'to pneuma', 'Art-NNS + N-NNS', 'the Spirit',
+'Holy Spirit (context). Neuter grammar, personal agency.',
+20
+FROM verses v WHERE v.ref='Romans 8:26';
+
+-- Romans 8:26a (main verb + dative object)
+INSERT INTO greek_margins (verse_id, unit_id, lemma_greek, translit, morph, gloss, note_md, sort_order)
+SELECT v.id, 'SANCT_CORE_ROM_008_018_030',
+'συναντιλαμβάνεται τῇ ἀσθενείᾳ ἡμῶν', 'synantilambanetai tē astheneia hēmōn',
+'V-Pres Ind Mid 3S + Art-DFS + N-DFS + Gen-1P', 'takes hold together with our weakness',
+'Not “helps from afar”—**co-lifts**. Dative: help operates *in the sphere of* our weakness (especially prayer).',
+30
+FROM verses v WHERE v.ref='Romans 8:26';
+________________________________________
+Quick theological payoff (why this matters)
+This wording protects the meaning:
+•	Not: “The Spirit makes you strong so you don’t feel weak.”
+•	But: “The Spirit enters weakness and bears it with you, translating it God-ward.”
+That’s sanctification: Christ formed in us through Spirit-help inside the groaning/waiting life.
+________________________________________
+If you paste the next line that starts with τὸ γὰρ τί προσευξώμεθα…, I’ll finish 8:26b–27 in the same margin format and generate the remaining SQL rows to complete the whole unit cleanly.
+
+
+
