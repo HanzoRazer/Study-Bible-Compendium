@@ -1,0 +1,51 @@
+name: Milestone Blocker
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+  # Also run on issue changes to update PR status
+  issues:
+    types: [opened, closed, labeled, unlabeled]
+
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+
+jobs:
+  milestone-blocker:
+    name: Check Milestone Blockers
+    runs-on: ubuntu-latest
+
+    env:
+      MILESTONE_NAME: "Production Readiness v1.1"
+      BLOCKING_LABELS: "blocking"
+      BLOCKING_PREFIXES: "FTS-,PAGE-,PERF-"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Check milestone blockers
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          python .github/scripts/milestone_blocker.py \
+            --repo "${GITHUB_REPOSITORY}" \
+            --milestone "${MILESTONE_NAME}" \
+            --blocking-labels "${BLOCKING_LABELS}" \
+            --blocking-prefixes "${BLOCKING_PREFIXES}"
