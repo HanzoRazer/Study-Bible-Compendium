@@ -1,0 +1,123 @@
+{
+  "version": "1.1",
+  "name": "Production Readiness v1.1 PR Gates",
+  "applies_to": {
+    "branches": ["main"],
+    "paths_watch": [
+      "sbc/**",
+      "schema/**",
+      "compendium.py",
+      "cli/**",
+      "docs/**"
+    ]
+  },
+  "required_pr_labels_any_of": [
+    "fts",
+    "pagination",
+    "performance",
+    "maintenance",
+    "docs"
+  ],
+  "required_pr_template_checkboxes": [
+    {
+      "id": "chk-acceptance",
+      "text": "Acceptance criteria in linked issues are fully met",
+      "required": true
+    },
+    {
+      "id": "chk-no-stacktraces",
+      "text": "User-facing errors are friendly (no stack traces for expected failures)",
+      "required": true
+    },
+    {
+      "id": "chk-logging",
+      "text": "Relevant operations are logged with timing and context",
+      "required": true
+    },
+    {
+      "id": "chk-tests",
+      "text": "Tests added/updated for this change (or justified if not applicable)",
+      "required": true
+    }
+  ],
+  "gate_rules": [
+    {
+      "id": "gate-fts-required",
+      "when": {
+        "labels_any": ["fts"],
+        "changed_paths_any": ["sbc/search.py", "sbc/db.py", "schema/**", "compendium.py", "cli/**"]
+      },
+      "require": {
+        "files_exist_any": ["docs/fts.md", "schema/fts.sql"],
+        "tests_match_any": ["tests/test_fts*.py", "tests/test_search*.py"],
+        "pr_template_checkboxes_checked": ["chk-acceptance", "chk-no-stacktraces", "chk-tests"]
+      }
+    },
+    {
+      "id": "gate-pagination-required",
+      "when": {
+        "labels_any": ["pagination"],
+        "changed_paths_any": ["sbc/search.py", "compendium.py", "cli/**"]
+      },
+      "require": {
+        "docs_contains": [
+          { "file": "docs/cli.md", "must_include": "--limit" },
+          { "file": "docs/cli.md", "must_include": "--offset" }
+        ],
+        "tests_match_any": ["tests/test_pagination*.py", "tests/test_search*.py"],
+        "pr_template_checkboxes_checked": ["chk-acceptance", "chk-tests"]
+      }
+    },
+    {
+      "id": "gate-performance-required",
+      "when": {
+        "labels_any": ["performance"],
+        "changed_paths_any": ["sbc/**", "compendium.py", "cli/**"]
+      },
+      "require": {
+        "files_exist_any": ["docs/performance.md", "sbc/bench.py"],
+        "pr_template_checkboxes_checked": ["chk-acceptance", "chk-logging", "chk-tests"]
+      }
+    },
+    {
+      "id": "gate-bench-evidence-on-search-changes",
+      "when": {
+        "changed_paths_any": ["sbc/search.py", "schema/fts.sql", "sbc/db.py"],
+        "labels_any": ["fts", "performance", "pagination"]
+      },
+      "require": {
+        "docs_contains": [
+          { "file": "docs/performance.md", "must_include": "Bench Results" }
+        ],
+        "artifact_or_link_present": {
+          "one_of": [
+            { "type": "file", "path_prefix": "docs/perf_runs/" },
+            { "type": "text_in_pr_body", "pattern": "Bench Evidence:" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "gate-release-gate-blockers",
+      "when": {
+        "milestone": "Production Readiness v1.1"
+      },
+      "require": {
+        "no_open_issues_with_labels": ["blocking"],
+        "no_open_issues_with_prefixes": ["FTS-", "PAGE-", "PERF-"]
+      }
+    }
+  ],
+  "recommended_pr_body_sections": [
+    "Summary",
+    "Linked Issues",
+    "Acceptance Criteria",
+    "Bench Evidence",
+    "Risk / Rollback"
+  ],
+  "outputs": {
+    "ci_annotations": true,
+    "fail_on_missing": true,
+    "report_format": "markdown"
+  }
+}

@@ -1,0 +1,47 @@
+name: PR Gates (v1.1)
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, labeled, unlabeled, reopened]
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  pr-gates:
+    name: Enforce v1.1 PR Gates
+    runs-on: ubuntu-latest
+
+    env:
+      POLICY_PATH: docs/pr_checklist_v1_1.json
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Run PR gates
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_BASE_REF: ${{ github.event.pull_request.base.ref }}
+        run: |
+          python .github/scripts/pr_gates.py \
+            --policy "${POLICY_PATH}" \
+            --repo "${GITHUB_REPOSITORY}" \
+            --pr "${PR_NUMBER}" \
+            --base "${PR_BASE_REF}"
