@@ -1,0 +1,14 @@
+Passage Report – Genesis 1:1-2 (TEST)
+=====================================
+
+Reference : Genesis 1:1-2
+Translation: TEST
+Hermeneutical Policy: v1.0.0 (checksum 38acc82a078b...)
+
+
+[Passage]
+GEN 1:1  In the beginning God created the heaven and the earth.
+GEN 1:2  And the earth was without form, and void; and darkness was upon the face of the deep. And the Spirit of God moved upon the face of the waters.
+
+[Context Window]
+(No context verses found.)

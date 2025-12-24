@@ -1,0 +1,311 @@
+
+________________________________________
+📘 Doctrinal Preface
+Study Bible Compendium – Hermeneutical Foundation
+This Study Bible Compendium is built on the conviction that Holy Scripture is the inspired, sufficient, and authoritative Word of God, breathed out by the Spirit and preserved for the people of God in history. Because Scripture is God’s Word, it interprets itself, governs all doctrine, and stands above every tradition, denomination, commentary, and human teacher.
+We affirm the unity of the Old and New Testaments and confess that the entire canon, from Genesis to Revelation, bears faithful witness to the person and work of the Messiah. The Law, the Prophets, the Writings, the Gospels, and the Apostolic writings form a single, coherent revelation in which Christ is the central figure and interpretive key—without cancelling the plain sense, historical setting, or linguistic reality of any passage.
+For this reason, our method refuses to bend the text to fit systems, trends, or personalities. Instead, it submits every interpretation to the original languages—Hebrew, the Septuagint Greek (LXX), and New Testament Greek—together with careful attention to context, grammar, typology, and inspired cross-references. Where hard choices must be made, the language of the text rules over tradition, opinion, or consensus.
+This Hermeneutical Rule Policy is therefore not an optional appendix, but the binding interpretive standard for all commentary, notes, word studies, and doctrinal conclusions within this Compendium. Every study, cross-reference, and theological conclusion is expected to conform to these rules, so that God’s Word may be handled with reverence, accuracy, and integrity, and so that Christ may be seen clearly in the very words by which the Spirit chose to reveal Him.
+________________________________________
+2. SQLite “Locked” Policy Table Design
+Below is a concrete schema you can drop straight into your Compendium database. The idea:
+•	Store one authoritative row for the hermeneutical policy.
+•	Include both the doctrinal preface and the policy body.
+•	Use triggers to prevent insert/update/delete once it’s set (making it effectively “read-only” at the DB level).
+You can name the DB whatever you like (e.g., study_bible_compendium.db), but here’s the actual SQL.
+2.1. Table Definition
+-- Main hermeneutical policy table
+CREATE TABLE IF NOT EXISTS hermeneutical_policy (
+    id              INTEGER PRIMARY KEY CHECK (id = 1),
+    title           TEXT NOT NULL,
+    preface         TEXT NOT NULL,
+    body            TEXT NOT NULL,
+    version         TEXT NOT NULL,          -- e.g. '1.0.0'
+    effective_utc   TEXT NOT NULL,          -- ISO8601 string: '2025-11-28T00:00:00Z'
+    checksum        TEXT NOT NULL           -- e.g. SHA256 hash of preface + body, computed in Python
+);
+2.2. Locking Triggers
+These make the table effectively immutable after the initial insert.
+-- Prevent additional rows beyond the first
+CREATE TRIGGER IF NOT EXISTS hermeneutical_policy_no_extra_inserts
+BEFORE INSERT ON hermeneutical_policy
+WHEN (SELECT COUNT(*) FROM hermeneutical_policy) >= 1
+BEGIN
+    SELECT RAISE(ABORT, 'hermeneutical_policy is locked; no further inserts allowed');
+END;
+-- Prevent updates
+CREATE TRIGGER IF NOT EXISTS hermeneutical_policy_no_updates
+BEFORE UPDATE ON hermeneutical_policy
+BEGIN
+    SELECT RAISE(ABORT, 'hermeneutical_policy is locked; updates are not allowed');
+END;
+-- Prevent deletes
+CREATE TRIGGER IF NOT EXISTS hermeneutical_policy_no_deletes
+BEFORE DELETE ON hermeneutical_policy
+BEGIN
+    SELECT RAISE(ABORT, 'hermeneutical_policy is locked; deletes are not allowed');
+END;
+2.3. Example Initial INSERT
+You’d run something like this once from your Python CLI (compute :checksum in Python):
+INSERT INTO hermeneutical_policy (
+    id,
+    title,
+    preface,
+    body,
+    version,
+    effective_utc,
+    checksum
+) VALUES (
+    1,
+    'Study Bible Compendium – Hermeneutical Rule Policy',
+    :preface_text,
+    :body_text,
+    '1.0.0',
+    '2025-11-28T00:00:00Z',
+    :checksum_value
+);
+Where:
+•	:preface_text = the Doctrinal Preface text above.
+•	:body_text = the full Hermeneutical Rule Policy we just finalized in the last step.
+•	:checksum_value = e.g., a SHA-256 hash of preface + body computed in your Python loader script.
+
+
+Hermeneutical Rule Policy—fully developed, professionally formatted, and aligned with the exact principles you listed.
+This is written in drop-in handbook style, suitable for:
+•	Study Bibles
+•	Teaching manuals
+•	Seminary syllabi
+•	Church doctrine statements
+•	Your Study Bible Compendium project
+Nothing is added beyond your philosophy.
+Nothing is softened.
+Nothing is academicized.
+This is your hermeneutics system—precise, simple, powerful.
+________________________________________
+📘 HERMENEUTICAL RULE POLICY
+A Framework for Interpreting Scripture with Linguistic Integrity and Theological Accuracy
+________________________________________
+1. THE PRIME RULE
+“Follow the original language when you have issues.
+The language will bear out 90% of the interpretation in most cases.”
+When Scripture appears unclear, disputed, or misinterpreted, the solution is not:
+•	tradition
+•	commentary
+•	consensus
+•	denominational teaching
+•	theological system
+The solution is the language itself:
+•	Hebrew (OT)
+•	Septuagint Greek (LXX)
+•	New Testament Greek
+The inspired text has priority over all later interpretations.
+________________________________________
+2. SECOND RULE: GO WITH WHAT THE TEXT SAYS
+“If the Septuagint says angels (angelos) and not sons of God… go with angels — regardless of what famous scholars say.”
+This principle guards interpretation from:
+•	tradition override
+•	consensus pressure
+•	theological bias
+•	eisegesis
+Text over tradition.
+Language over scholars.
+Original meaning over modern reconstruction.
+________________________________________
+3. LINGUISTIC PRIORITIES (IN ORDER)
+✔ 1. Original Hebrew (Masoretic Text, compared with DSS as needed)
+✔ 2. Septuagint Greek (LXX)
+The LXX often preserves older readings, clarifies idioms, and reveals early Jewish interpretation.
+✔ 3. New Testament Greek
+How Jesus and the apostles cite the OT is authoritative.
+✔ 4. Plain-sense meaning
+Interpret the text as it naturally reads unless the context clearly indicates metaphor or typology.
+________________________________________
+4. WHAT THIS POLICY REJECTS
+❌ No bending Scripture to fit tradition
+❌ No speculative reconstructions
+❌ No mystical reinterpretations
+❌ No theological override
+❌ No forcing doctrines onto words
+❌ No preference for scholarly consensus over linguistic facts
+The text governs the theology.
+Not the other way around.
+________________________________________
+5. REQUIRED METHODS FOR INTERPRETATION
+✔ A. Seek Typology
+When the text forms clear patterns pointing:
+•	from shadow → to Christ
+•	from type → to antitype
+•	from OT narrative → to NT revelation
+Follow those patterns.
+Typology is God’s divine architecture.
+________________________________________
+✔ B. Seek Direct Cross-References (OT → NT)
+Scripture interprets Scripture.
+•	If Paul cites it → that interpretation is final
+•	If Jesus applies it → that settles it
+•	If Hebrews expands it → that is authoritative
+Always ask:
+“Where is this used in the NT?”
+________________________________________
+✔ C. Use Comparison and Contrast
+Biblical truth is clarified by:
+•	comparing covenants
+•	comparing shadows and substances
+•	comparing figures (Adam vs. Christ; Joseph vs. Christ)
+•	contrasting light vs. darkness, flesh vs. spirit
+This is a foundational Hebrew method of teaching.
+________________________________________
+✔ D. Perform Line-by-Line Exegesis
+Word by word.
+Phrase by phrase.
+Clause by clause.
+Never skip context.
+Never impose theology on a verse.
+Never build doctrine from fragments.
+The verse means what it means in its textual location.
+________________________________________
+6. OPTIONAL BUT POWERFUL TOOL: HEBREW PICTOGRAMS
+✔ “Create framework with Hebrew pictograms where possible.”
+This means:
+•	Picturegrams support meaning
+•	Picturegrams do not override meaning
+•	Use them for:
+o	conceptual depth
+o	word roots
+o	teaching clarity
+o	visual reinforcement
+o	typological patterns
+Always:
+Lexical meaning first.
+Pictograph second.
+________________________________________
+7. SUMMARY STATEMENT
+The Hermeneutical Rule Policy establishes:
+✔ Text over tradition
+✔ Language over commentary
+✔ OT–NT unity over denominational division
+✔ Typology over speculation
+✔ Exegesis over imagination
+✔ Context over proof-texting
+✔ Hebrew thought over Greek abstraction
+✔ Spirit-led insight anchored in linguistic truth
+This policy ensures that Scripture:
+•	interprets itself
+•	governs theology
+•	reveals Christ
+•	protects the believer from deception
+•	produces mature, accurate, Spirit-filled teaching
+📘 HERMENEUTICAL RULE POLICY
+A Framework for Interpreting Scripture with Linguistic Integrity and Theological Accuracy
+________________________________________
+1. THE PRIME RULE
+“Follow the original language when you have issues.
+The language will bear out 90% of the interpretation in most cases.”
+When Scripture appears unclear, disputed, or misinterpreted, the solution is not:
+•	tradition
+•	commentary
+•	consensus
+•	denominational teaching
+•	theological system
+The solution is the language itself:
+•	Hebrew (OT)
+•	Septuagint Greek (LXX)
+•	New Testament Greek
+The inspired text has priority over all later interpretations.
+________________________________________
+2. SECOND RULE: GO WITH WHAT THE TEXT SAYS
+“If the Septuagint says angels (angelos) and not sons of God… go with angels — regardless of what famous scholars say.”
+This principle guards interpretation from:
+•	tradition override
+•	consensus pressure
+•	theological bias
+•	eisegesis
+Text over tradition.
+Language over scholars.
+Original meaning over modern reconstruction.
+________________________________________
+3. LINGUISTIC PRIORITIES (IN ORDER)
+✔ 1. Original Hebrew (Masoretic Text, compared with DSS as needed)
+✔ 2. Septuagint Greek (LXX)
+The LXX often preserves older readings, clarifies idioms, and reveals early Jewish interpretation.
+✔ 3. New Testament Greek
+How Jesus and the apostles cite the OT is authoritative.
+✔ 4. Plain-sense meaning
+Interpret the text as it naturally reads unless the context clearly indicates metaphor or typology.
+________________________________________
+4. WHAT THIS POLICY REJECTS
+❌ No bending Scripture to fit tradition
+❌ No speculative reconstructions
+❌ No mystical reinterpretations
+❌ No theological override
+❌ No forcing doctrines onto words
+❌ No preference for scholarly consensus over linguistic facts
+The text governs the theology.
+Not the other way around.
+________________________________________
+5. REQUIRED METHODS FOR INTERPRETATION
+✔ A. Seek Typology
+When the text forms clear patterns pointing:
+•	from shadow → to Christ
+•	from type → to antitype
+•	from OT narrative → to NT revelation
+Follow those patterns.
+Typology is God’s divine architecture.
+________________________________________
+✔ B. Seek Direct Cross-References (OT → NT)
+Scripture interprets Scripture.
+•	If Paul cites it → that interpretation is final
+•	If Jesus applies it → that settles it
+•	If Hebrews expands it → that is authoritative
+Always ask:
+“Where is this used in the NT?”
+________________________________________
+✔ C. Use Comparison and Contrast
+Biblical truth is clarified by:
+•	comparing covenants
+•	comparing shadows and substances
+•	comparing figures (Adam vs. Christ; Joseph vs. Christ)
+•	contrasting light vs. darkness, flesh vs. spirit
+This is a foundational Hebrew method of teaching.
+________________________________________
+✔ D. Perform Line-by-Line Exegesis
+Word by word.
+Phrase by phrase.
+Clause by clause.
+Never skip context.
+Never impose theology on a verse.
+Never build doctrine from fragments.
+The verse means what it means in its textual location.
+________________________________________
+6. OPTIONAL BUT POWERFUL TOOL: HEBREW PICTOGRAMS
+✔ “Create framework with Hebrew pictograms where possible.”
+This means:
+•	Picturegrams support meaning
+•	Picturegrams do not override meaning
+•	Use them for:
+o	conceptual depth
+o	word roots
+o	teaching clarity
+o	visual reinforcement
+o	typological patterns
+Always:
+Lexical meaning first.
+Pictograph second.
+________________________________________
+7. SUMMARY STATEMENT
+The Hermeneutical Rule Policy establishes:
+✔ Text over tradition
+✔ Language over commentary
+✔ OT–NT unity over denominational division
+✔ Typology over speculation
+✔ Exegesis over imagination
+✔ Context over proof-texting
+✔ Hebrew thought over Greek abstraction
+✔ Spirit-led insight anchored in linguistic truth
+This policy ensures that Scripture:
+•	interprets itself
+•	governs theology
+•	reveals Christ
+•	protects the believer from deception
+•	produces mature, accurate, Spirit-filled teaching
+

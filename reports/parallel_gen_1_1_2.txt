@@ -1,0 +1,16 @@
+Parallel Translation Report – Genesis 1:1-2
+===========================================
+
+Reference : Genesis 1:1-2
+Translations: KJV, TEST
+Hermeneutical Policy: v1.0.0 (checksum 38acc82a078b...)
+
+
+GEN 1:1
+  [KJV] In the beginning God created the heaven and the earth.
+  [TEST] In the beginning God created the heaven and the earth.
+
+GEN 1:2
+  [KJV] And the earth was without form, and void; and darkness was upon the face of the deep. And the Spirit of God moved upon the face of the waters.
+  [TEST] And the earth was without form, and void; and darkness was upon the face of the deep. And the Spirit of God moved upon the face of the waters.
+

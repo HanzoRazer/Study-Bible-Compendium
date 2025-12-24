@@ -1,0 +1,30 @@
+# Large files (exceed GitHub 100MB limit)
+*.sqlite
+*.sqlite3
+*.db
+*.pdf
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+
+# Logs
+logs/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Keep data folder but ignore large exports
+data/*.csv
+!data/.gitkeep
