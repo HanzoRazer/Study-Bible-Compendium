@@ -1,0 +1,46 @@
+timestamp,project,category,series_or_scope,artifact_type,name,path,bytes,pages,status,notes
+2025-08-17 11:53:40,Bible Library,Bible,ASV,pdf,asv.pdf,/mnt/data/asv.pdf,8224615,1510,available,
+2025-08-17 11:53:40,Bible Library,Bible,YLT,pdf,ylt.pdf,/mnt/data/ylt.pdf,8335116,1506,available,
+2025-08-17 11:53:40,Bible Library,Bible,JPS,pdf,jps.pdf,/mnt/data/jps.pdf,8469095,1529,available,
+2025-08-17 11:53:40,Bible Library,Bible,Torah,pdf,Torah.pdf,/mnt/data/Torah.pdf,5691491,638,available,
+2025-08-17 11:53:40,Bible Library,Bible,DBT,pdf,dbt.pdf,/mnt/data/dbt.pdf,8202017,1500,available,
+2025-08-17 11:53:40,Berean Assets,Bible,BGB,pdf,bgb.pdf,/mnt/data/bgb.pdf,4563488,537,available,
+2025-08-17 11:53:40,Berean Assets,Bible,BGB,docx,bgb.docx,/mnt/data/bgb.docx,814048,,available,
+2025-08-17 11:53:40,Berean Assets,Bible,BLB,docx,blb.docx,/mnt/data/blb.docx,633001,,available,
+2025-08-17 11:53:40,Berean Assets,Bible,Berean,csv,berean_text.csv,/mnt/data/berean_text.csv,6703666,,available,
+2025-08-17 11:53:40,Berean Assets,Bible,Berean,csv,berean_chapters.csv,/mnt/data/berean_chapters.csv,6431704,,available,
+2025-08-17 11:53:40,Berean Assets,Bible,Berean,csv,berean_tables.csv,/mnt/data/berean_tables.csv,37903102,,available,
+2025-08-17 11:53:40,Midrash Study Bible,Commentary,Midrash,pdf,THE MIDRASH OF THE MESSIAH.pdf,/mnt/data/THE MIDRASH OF THE MESSIAH.pdf,11107385,325,available,
+2025-08-17 11:53:40,Midrash Study Bible,Commentary,Midrash/Mishnah,pdf,midrash_and_mishnah.pdf,/mnt/data/midrash_and_mishnah.pdf,2103050,137,available,
+2025-08-17 11:53:40,Midrash Study Bible,Commentary,Talmud,pdf,Babylonian-Talmud.pdf,/mnt/data/Babylonian-Talmud.pdf,7790289,3225,available,
+2025-08-17 11:53:40,Reference,Lexicon,Strong's,pdf,84592831-Strong-s-Greek-and-Hebrew-Dictionaries.pdf,/mnt/data/84592831-Strong-s-Greek-and-Hebrew-Dictionaries.pdf,4544370,1412,available,
+2025-08-17 11:53:40,Thompson-Chain 1908,Reference,Series 300-734,pdf part,part_5 (1-11),/mnt/data/Thompson-Chain-Reference-Bible-1908-Edition-300-734_part_5-1-11.pdf,22242307,11,available,Queued/merged
+2025-08-17 11:53:40,Thompson-Chain 1908,Reference,Series 300-734,pdf part,part_5 (12-21),/mnt/data/Thompson-Chain-Reference-Bible-1908-Edition-300-734_part_5-12-21.pdf,19620448,10,available,Queued/merged
+2025-08-17 11:53:40,Thompson-Chain 1908,Reference,Series 300-734,pdf part,part_6 (1-12),/mnt/data/Thompson-Chain-Reference-Bible-1908-Edition-300-734_part_6-1-12.pdf,21991895,12,available,Queued/merged
+2025-08-17 11:53:40,Thompson-Chain 1908,Reference,Series 300-734,pdf part,part_4 (12-22),/mnt/data/Thompson-Chain-Reference-Bible-1908-Edition-300-734_part_4-12-22.pdf,20784083,11,available,Queued/merged
+2025-08-17 11:53:40,Thompson-Chain 1908,Reference,Series 1-300,pdf part,part_6 (12-22),/mnt/data/Thompson-Chain-Reference-Bible-1908-Edition-1-300_part_6-12-22.pdf,20855036,11,available,Queued/merged
+2025-08-17 11:53:40,Thompson-Chain 1908,Reference,Series 300-734,pdf part,part_4 (1-11),/mnt/data/Thompson-Chain-Reference-Bible-1908-Edition-300-734_part_4-1-11.pdf,20645107,11,available,Queued/merged
+2025-08-17 11:53:40,Thompson-Chain 1908,Reference,Series 1-300,pdf part,part_9 (1-11),/mnt/data/Thompson-Chain-Reference-Bible-1908-Edition-1-300_part_9-1-11.pdf,18752172,11,available,Queued/merged
+2025-08-17 11:53:40,Thompson-Chain 1908,Reference,Series 1-300,pdf part,part_10 (1-11),/mnt/data/Thompson-Chain-Reference-Bible-1908-Edition-1-300_part_10-1-11.pdf,19845834,11,available,Queued/merged
+2025-08-17 11:53:40,Thompson-Chain 1908,Reference,Series 1-300,pdf part,part_14 (full),/mnt/data/Thompson-Chain-Reference-Bible-1908-Edition-1-300_part_14.pdf,25019913,13,available,Queued/merged
+2025-08-17 11:53:40,Thompson-Chain 1908,Reference,Series 300-734,pdf part,part_6 (13-23),/mnt/data/Thompson-Chain-Reference-Bible-1908-Edition-300-734_part_6-13-23.pdf,19443743,11,available,Queued/merged
+2025-08-17 11:53:40,Thompson-Chain 1908,Reference,Series 1-300,pdf part,part_13 (full),/mnt/data/Thompson-Chain-Reference-Bible-1908-Edition-1-300_part_13.pdf,40155621,22,available,Queued/merged
+2025-08-17 11:53:40,Thompson-Chain 1908,Reference,Series 1-300,pdf part,part_9 (12-22),/mnt/data/Thompson-Chain-Reference-Bible-1908-Edition-1-300_part_9-12-22.pdf,22634829,11,available,Queued/merged
+2025-08-17 11:53:40,Thompson-Chain 1908,Reference,Series 1-300,pdf part,part_10 (12-22),/mnt/data/Thompson-Chain-Reference-Bible-1908-Edition-1-300_part_10-12-22.pdf,21354763,11,available,Queued/merged
+2025-08-17 11:53:40,Thompson-Chain 1908,Reference,Series 1-300,pdf part,part_3 (1-11),/mnt/data/Thompson-Chain-Reference-Bible-1908-Edition-1-300_part_3-1-11.pdf,20467112,11,available,Queued/merged
+2025-08-17 11:53:40,Thompson-Chain 1908,Reference,Series 1-300,pdf part,part_3 (12-22),/mnt/data/Thompson-Chain-Reference-Bible-1908-Edition-1-300_part_3-12-22.pdf,21100260,11,available,Queued/merged
+2025-08-17 11:53:40,Thompson-Chain 1908,Reference,Series 1-300,pdf part,part_6 (1-11),/mnt/data/Thompson-Chain-Reference-Bible-1908-Edition-1-300_part_6-1-11.pdf,20327117,11,available,Queued/merged
+2025-08-17 11:53:40,Thompson-Chain 1908,Reference,Series 1-300,pdf part,part_11 (full),/mnt/data/Thompson-Chain-Reference-Bible-1908-Edition-1-300_part_11.pdf,40900898,22,available,Queued/merged
+2025-08-17 11:53:40,Thompson-Chain 1908,Reference,Series 1-300,pdf part,part_13 (1-11),/mnt/data/Thompson-Chain-Reference-Bible-1908-Edition-1-300_part_13-1-11.pdf,20589846,11,available,Queued/merged
+2025-08-17 11:53:40,Thompson-Chain 1908,Reference,Series 1-300,pdf part,part_12 (full),/mnt/data/Thompson-Chain-Reference-Bible-1908-Edition-1-300_part_12.pdf,41444551,22,available,Queued/merged
+2025-08-17 11:53:40,Thompson-Chain 1908,Reference,Series 1-300,pdf part,part_13 (12-22),/mnt/data/Thompson-Chain-Reference-Bible-1908-Edition-1-300_part_13-12-22.pdf,19565969,11,available,Queued/merged
+2025-08-17 11:53:40,Thompson-Chain 1908,Reference,Series 1-300,pdf part,part_7 (full),/mnt/data/Thompson-Chain-Reference-Bible-1908-Edition-1-300_part_7.pdf,40295619,22,available,Queued/merged
+2025-08-17 11:53:40,Thompson-Chain 1908,Reference,Series 1-300,pdf part,part_5 (full),/mnt/data/Thompson-Chain-Reference-Bible-1908-Edition-1-300_part_5.pdf,41134548,22,available,Queued/merged
+2025-08-17 11:53:40,Thompson-Chain 1908,Reference,Series 1-300,pdf part,part_1 (full),/mnt/data/Thompson-Chain-Reference-Bible-1908-Edition-1-300_part_1.pdf,40229452,25,available,Queued/merged
+2025-08-17 11:53:40,Thompson-Chain 1908,Reference,Series 1-300,pdf part,part_2 (full),/mnt/data/Thompson-Chain-Reference-Bible-1908-Edition-1-300_part_2.pdf,41319249,22,available,Queued/merged
+2025-08-17 11:53:40,Thompson-Chain 1908,Reference,Series 1-300,pdf part,part_4 (full),/mnt/data/Thompson-Chain-Reference-Bible-1908-Edition-1-300_part_4.pdf,40284108,21,available,Queued/merged
+2025-08-17 11:53:40,Thompson-Chain 1908,Reference,Series 1-300,pdf part,part_8 (full),/mnt/data/Thompson-Chain-Reference-Bible-1908-Edition-1-300_part_8.pdf,40151749,21,available,Queued/merged
+2025-08-17 11:53:40,Water Network Simulation,Technical,Hydraulics,plan,Baseline & Upgrade CSVs,,,,planned,Rebuild via local scripts
+2025-08-17 11:53:40,Business Plan: Wooden Toys,Business,Product,plan,Docs & BOM,,,,planned,
+2025-08-17 11:53:40,Business Concept: Bluetooth Guitar,Business,Product,plan,CAD & Firmware,,,,planned,
+2025-08-17 11:53:40,Program: CNC Training (Probationers),Business,Program,plan,Curriculum,,,,planned,

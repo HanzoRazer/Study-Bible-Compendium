@@ -1,0 +1,38 @@
+project,phase,artifact_type,path,action,command_to_recreate,dependencies,status,notes,timestamp
+Barnabas Study,outputs,pdf,/mnt/data/KJV_Barnabas_Study_Report.pdf,export,(local file; re-export via project CLI if missing),kjv_barnabas_study.sqlite,available,Barnabas verses report (KJV focus).,2025-08-17 06:19:00
+Barnabas Study,outputs,pdf,/mnt/data/Barnabas_Verse_by_Verse_Study.pdf,export,(local file; re-export via project CLI if missing),kjv_barnabas_study.sqlite,available,Verse-by-verse layout.,2025-08-17 06:19:00
+Barnabas Study,outputs,pdf,/mnt/data/Barnabas_Parallel_Bible_Study.pdf,export,(local file; re-export via project CLI if missing),kjv_barnabas_study.sqlite,available,Parallel versions.,2025-08-17 06:19:00
+Barnabas Study,data,sqlite,/mnt/data/kjv_barnabas_study.sqlite,build-db,python barnabas_pipeline.py --build-sqlite kjv_barnabas_study.sqlite,KJV/BSB/ASV sources,available,Searchable DB of Barnabas references.,2025-08-17 06:19:00
+Barnabas Study,data,sql,/mnt/data/verse_coverage_barnabas_only.sql,export-sql,python barnabas_pipeline.py --dump-sql verse_coverage_barnabas_only.sql,kjv_barnabas_study.sqlite,available,,2025-08-17 06:19:00
+Midrash Study Bible,inputs,pdf,/mnt/data/THE MIDRASH OF THE MESSIAH.pdf,ingest,"python midrash_pipeline.py --ingest ""THE MIDRASH OF THE MESSIAH.pdf""","Python: pypdf, reportlab",available,Primary commentary source.,2025-08-17 06:19:00
+Midrash Study Bible,checkpoints,csv,/mnt/data/_chk_gen1_1-10_parallel.csv,checkpoint,python midrash_pipeline.py --make-parallel --book Genesis --chap 1 --start 1 --end 10,ASV/YLT/BSB/Torah PDFs + Midrash PDF,available,Parallel text 1:1–10,2025-08-17 06:19:00
+Midrash Study Bible,checkpoints,csv,/mnt/data/_chk_gen1_1-10_dake_notes.csv,checkpoint,python midrash_pipeline.py --extract-dake-notes --book Genesis --chap 1 --start 1 --end 10,Dake PDFs (optional),available,,2025-08-17 06:19:00
+Midrash Study Bible,checkpoints,csv,/mnt/data/_chk_gen1_1-10_midrash.csv,checkpoint,python midrash_pipeline.py --extract-midrash --book Genesis --chap 1 --start 1 --end 10,THE MIDRASH OF THE MESSIAH.pdf,available,,2025-08-17 06:19:00
+Midrash Study Bible,outputs,pdf,/mnt/data/genesis_1_1-10_with_dake_color.pdf,export,python render_parallel_pdf.py --csv /mnt/data/_chk_gen1_1-10_parallel.csv --out /mnt/data/genesis_1_1-10_with_dake_color.pdf,reportlab,available,,2025-08-17 06:19:00
+Berean Assets,inputs,csv,/mnt/data/berean_text.csv,ingest,python berean_loader.py --import /mnt/data/berean_text.csv,,available,,2025-08-17 06:19:00
+Berean Assets,inputs,csv,/mnt/data/berean_chapters.csv,ingest,python berean_loader.py --import /mnt/data/berean_chapters.csv,,available,,2025-08-17 06:19:00
+Berean Assets,inputs,csv,/mnt/data/berean_tables.csv,ingest,python berean_loader.py --import /mnt/data/berean_tables.csv,,available,,2025-08-17 06:19:00
+Bible Library,inputs,pdf,/mnt/data/asv.pdf,catalog,(no-op; available as source),,available,,2025-08-17 06:19:00
+Bible Library,inputs,pdf,/mnt/data/ylt.pdf,catalog,(no-op; available as source),,available,,2025-08-17 06:19:00
+Bible Library,inputs,pdf,/mnt/data/jps.pdf,catalog,(no-op; available as source),,available,,2025-08-17 06:19:00
+Bible Library,inputs,pdf,/mnt/data/Torah.pdf,catalog,(no-op; available as source),,available,,2025-08-17 06:19:00
+Bible Library,inputs,pdf,/mnt/data/akjv.pdf,catalog,(no-op; available as source),,available,,2025-08-17 06:19:00
+Bible Library,inputs,pdf,/mnt/data/drb.pdf,catalog,(no-op; available as source),,available,,2025-08-17 06:19:00
+Bible Library,inputs,pdf,/mnt/data/erv.pdf,catalog,(no-op; available as source),,available,,2025-08-17 06:19:00
+Bible Library,inputs,pdf,/mnt/data/dbt.pdf,catalog,(no-op; available as source),,available,,2025-08-17 06:19:00
+Bible Library,inputs,pdf,/mnt/data/cpdv.pdf,catalog,(no-op; available as source),,available,,2025-08-17 06:19:00
+Bible Library,inputs,pdf,/mnt/data/wbt.pdf,catalog,(no-op; available as source),,available,,2025-08-17 06:19:00
+Bible Library,inputs,pdf,/mnt/data/slt.pdf,catalog,(no-op; available as source),,available,,2025-08-17 06:19:00
+Dake Annotated,inputs,pdf,/mnt/data/495838914-Dake-Bible 7_compressed_part_5.pdf,catalog,(no-op; available as source),,available,,2025-08-17 06:19:00
+Dake Annotated,inputs,pdf,/mnt/data/495838914-Dake-Bible--7_compressed (4).pdf,catalog,(no-op; available as source),,available,,2025-08-17 06:19:00
+Dake Annotated,inputs,pdf,/mnt/data/653935604-Dakes-Study-Notes-Finis-Dake-Dake-Finis-Z-lib-org.pdf,catalog,(no-op; available as source),,available,,2025-08-17 06:19:00
+Thompson-Chain 1908,queue,csv,/mnt/data/Queue_TCR.csv,generate,python tcr_queue_builder.py --scan /mnt/data --out /mnt/data/Queue_TCR.csv,pypdf or PyPDF2,available,Part inventory for 1–300 and 300–734,2025-08-17 06:19:00
+Thompson-Chain 1908,manifest,csv,/mnt/data/Combine_Manifest_1-300.csv,generate,python tcr_queue_builder.py --manifest 1-300,,available,,2025-08-17 06:19:00
+Thompson-Chain 1908,manifest,csv,/mnt/data/Combine_Manifest_300-734.csv,generate,python tcr_queue_builder.py --manifest 300-734,,available,,2025-08-17 06:19:00
+Thompson-Chain 1908,merge-list,txt,/mnt/data/Combine_List_1-300.txt,generate,python tcr_queue_builder.py --list 1-300,,available,,2025-08-17 06:19:00
+Thompson-Chain 1908,merge-list,txt,/mnt/data/Combine_List_300-734.txt,generate,python tcr_queue_builder.py --list 300-734,,available,,2025-08-17 06:19:00
+Thompson-Chain 1908,outputs,pdf,/mnt/data/Thompson-Chain-Reference-Bible-1908-Edition-1-300_FULL.pdf,merge,powershell .\QueueRunner_TCR.ps1 -QueueCsv .\Queue_TCR.csv -OutDir .\,,available,,2025-08-17 06:19:00
+Thompson-Chain 1908,outputs,pdf,/mnt/data/Thompson-Chain-Reference-Bible-1908-Edition-300-734_part4_FULL.pdf,merge,powershell .\QueueRunner_TCR.ps1 -QueueCsv .\Queue_TCR.csv -OutDir .\,,available,,2025-08-17 06:19:00
+Thompson-Chain 1908,scripts,ps1,/mnt/data/QueueRunner_TCR.ps1,generate,(script content provided below in Rebuild_From_CSV.ps1 section),,available,,2025-08-17 06:19:00
+Library Index,catalog,csv,/mnt/data/BibleLibrary_Index.csv,generate,python library_indexer.py --scan /mnt/data --out /mnt/data/BibleLibrary_Index.csv,,available,,2025-08-17 06:19:00
+Recovery Kit,scripts,ps1,/mnt/data/Rebuild_From_CSV.ps1,generate,(created below),"Powershell + Python (pypdf/PyPDF2), optional ocrmypdf",available,Executes command_to_recreate for each row.,2025-08-17 06:19:00
