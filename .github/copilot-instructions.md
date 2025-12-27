@@ -2,71 +2,156 @@
 
 ## Project Purpose
 
-A **Study Bible Compendium** system managing biblical texts, lexicons, cross-references, and interpretive materials using multiple **SQLite databases** with different schemas. Core principle: hermeneutical rules must be immutable once set to ensure interpretive consistency.
+A **Study Bible Compendium** system managing biblical texts, lexicons, cross-references, and interpretive materials in a single **SQLite database** (`compendium.sqlite`). Core principle: hermeneutical rules must be immutable once set to ensure interpretive consistency.
 
 ## Architecture Overview
 
-### Two Parallel Database Systems
+### Unified Database Architecture
 
-**1. Hermeneutical Policy Database** (`compendium.sqlite`)
-- Entry point: `cli/init_policy.py` (NEW: file-based loader)
-- Reads schema from `schema/hermeneutical_policy.sql`
-- Reads policy text from `data/policy_preface.txt` and `data/policy_body.txt`
-- Single-record immutable policy table with SHA-256 checksum
-- Enforced via SQLite triggers (no updates/deletes/additional inserts)
+The system uses a **single SQLite database** (`compendium.sqlite`) with **three coexisting schemas**:
 
-**2. Bible Data Database** (`compendium.sqlite`)
-- Entry points: `study_bible_compendium.py` (main engine) and specialized importers
-- Multi-version Bible text storage (KJV, BSB, ASV, Greek, Hebrew)
-- Strong's lexicon with verse mappings
-- Interlinear tokens for original language analysis
-- Cross-reference generation via shared Strong's numbers
+**1. Immutable Policy System**
+- Table: `hermeneutical_policy` (single row, trigger-locked)
+- Entry point: `cli/init_policy.py` or `compendium.py init-policy`
+- Policy source: `CANON/HERMENEUTICAL_RULE_POLICY.md` (SHA-256 locked)
+- Database backup: `data/policy_preface.txt` + `data/policy_body.txt`
+- Integrity: Three SQLite triggers prevent updates/deletes/extra inserts
 
-### Key Entry Points
+**2. Normalized Verse Schema** (NEW - Production System)
+- Table: `verses_normalized` (flat structure, multi-translation)
+- Entry point: `compendium.py` (unified CLI using `sbc/` package)
+- Format: `translation_code | book_num | chapter | verse | normalized_ref | text`
+- Canon: 66-book Protestant canon via `data/canon.json`
+- Features: Fast lookups, deduplication, canonical verse spine (`canonical_verses`)
+
+**3. Legacy & Berean Schemas** (Compatibility Layer)
+- Legacy: `bible_versions → books → chapters → verses` (317K verses, 14 translations)
+- Berean: `berean_verses`, `berean_words`, `berean_strongs` (NT Greek interlinear)
+- Entry points: `cli/study_bible_compendium.py`, `cli/import_berean.py`
+- Status: Read-only, coexists with normalized schema
+
+### Unified CLI Entry Point
+
+**Primary interface**: `compendium.py` (NEW - use this for all operations)
 
 ```bash
-# Policy initialization (NEW: file-based, reads from data/ and schema/)
-python cli\init_policy.py --db compendium.sqlite
-python cli\study_bible_cli.py --init-policy --db compendium.sqlite
+# Policy and schema initialization
+python compendium.py init-policy   # Lock hermeneutical policy
+python compendium.py init-schema   # Create verses_normalized table
+python compendium.py build-spine   # Build canonical verse spine
 
-# Bible data operations (main engine with subcommands)
+# Bible data operations (NEW unified API)
+python compendium.py import-bible data/kjv.csv KJV
+python compendium.py list-translations
+python compendium.py search "faith" --translation KJV --limit 50
+python compendium.py passage "John 3:16" --translations KJV BSB
+python compendium.py context "Romans 8:28" --before 2 --after 2
+python compendium.py parallel "Genesis 1:1" --translations KJV BSB ASV
+
+# PDF report generation
+python compendium.py pdf-report output.txt "Title" --body "Content..."
+python compendium.py pdf-passage "John 3" output.pdf --translations KJV BSB
+python compendium.py pdf-parallel "Genesis 1:1" output.pdf --translations KJV BSB
+
+# System status
+python compendium.py status        # Database health check
+
+# Legacy CLI tools (compatibility only)
 python cli\study_bible_compendium.py import-bible-csv --version-code BSB --file berean.csv
-python cli\study_bible_compendium.py import-strongs --language el --file strongs.csv
-python cli\study_bible_compendium.py search --query "faith" --version-code KJV
-
-# Berean Bible-specific tools (separate schema in compendium.sqlite)
 python cli\import_berean.py --db compendium.sqlite --berean-dir "sources\excel\Berean Bible"
-python cli\query_berean.py --db compendium.sqlite --strongs 3056  # Search by Strong's number
-python cli\xref_berean.py --db compendium.sqlite --verse "John 3:16"  # Cross-references
+python cli\query_berean.py --db compendium.sqlite --strongs 3056
+python cli\xref_berean.py --db compendium.sqlite --verse "John 3:16"
 
 # Utility tools
-python tools\batch_pdf_to_excel.py --input sources\pdf\ --output sources\excel\excel_output\
+python tools\batch_pdf_to_excel.py --input sources\pdf\ --output sources\excel\
+```
+
+### Core Package Structure: `sbc/`
+
+The unified CLI uses a modular package architecture:
+
+```python
+sbc/
+├── config.py       # Project version and constants
+├── paths.py        # Path management (PROJECT_ROOT, DB_PATH, SCHEMA_DIR)
+├── db.py           # Database connection management
+├── util.py         # Console output ([ok], [info], [warn], [error])
+├── model.py        # Data models (Verse, Book classes)
+├── loader.py       # Bible import from Excel/CSV
+├── search.py       # Full-text verse search
+├── context.py      # Verse context windows
+├── parallel.py     # Multi-translation parallel views
+├── spine.py        # Canonical verse spine builder
+├── pdfgen.py       # PDF report generation
+└── status.py       # System health checks
+```
+
+**Import pattern**:
+```python
+from sbc.paths import PROJECT_ROOT, DB_PATH
+from sbc.loader import import_bible_from_excel
+from sbc.search import search_verses
+from sbc.db import get_conn
 ```
 
 ## Critical Implementation Patterns
 
-### Immutable Policy Pattern (Policy DB)
-The hermeneutical policy uses **three database triggers** to prevent changes:
-1. `hermeneutical_policy_no_extra_inserts` - Blocks additional rows
-2. `hermeneutical_policy_no_updates` - Blocks modifications  
-3. `hermeneutical_policy_no_deletes` - Blocks deletions
+### CANON Integrity System (NEW)
 
-**Why**: Biblical interpretation rules must remain consistent; changes would invalidate derived scholarship.
+The hermeneutical policy uses **dual integrity locks**:
 
-### Checksum Verification
-Policy content integrity protected via SHA-256:
-```python
-checksum = hashlib.sha256((preface + "\n\n" + body).encode("utf-8")).hexdigest()
+**1. Git-Level Lock** (`CANON/CANON_LOCK.md`)
+- Tracks SHA-256 of `CANON/HERMENEUTICAL_RULE_POLICY.md`
+- Generated via: `python TOOLS/scripts/canon_lock.py`
+- CI verifies checksum on every push/PR
+- Changes require PR + review + changelog entry
+
+**2. Database-Level Lock** (`hermeneutical_policy` table)
+- Three SQLite triggers prevent mutations:
+  - `hermeneutical_policy_no_extra_inserts` - Blocks additional rows
+  - `hermeneutical_policy_no_updates` - Blocks modifications  
+  - `hermeneutical_policy_no_deletes` - Blocks deletions
+- Content checksum stored in database
+- Why: Biblical interpretation rules must remain consistent; changes invalidate derived scholarship
+
+**Workflow for policy changes**:
+```bash
+# 1. Edit CANON/HERMENEUTICAL_RULE_POLICY.md
+# 2. Update CANON/CANON_CHANGELOG.md
+# 3. Regenerate lock
+python TOOLS/scripts/canon_lock.py
+# 4. Re-initialize database
+python compendium.py init-policy --force
 ```
 
-### Dual-Interface Module Pattern
-Both CLI tools expose two interfaces:
-```python
-# Library interface (for integration)
-run_init_policy(db_path: str) -> None
+### Canonical Verse Spine Architecture
 
-# Standalone CLI (underscore-prefixed private function)
-def main(argv=None) -> None
+The `canonical_verses` table provides a **deduplication layer** for multi-translation verse storage:
+
+```sql
+-- Spine: One row per unique verse across all translations
+CREATE TABLE canonical_verses (
+    verse_id INTEGER PRIMARY KEY,
+    normalized_ref TEXT UNIQUE,  -- e.g., 'GEN.1.1'
+    book_num INTEGER,
+    book_code TEXT,
+    chapter INTEGER,
+    verse INTEGER
+);
+
+-- Verses link to spine via verse_id
+ALTER TABLE verses_normalized ADD COLUMN verse_id INTEGER;
+```
+
+**Why**: Allows notes, cross-references, and metadata to be translation-agnostic—attach to `verse_id` instead of duplicating per translation.
+
+**Usage**:
+```bash
+# Build spine from imported verses
+python compendium.py build-spine
+
+# Notes can now reference verse_id instead of translation-specific rows
+INSERT INTO notes (verse_id, content) VALUES (12345, 'Genesis 1:1 note');
 ```
 
 ### Berean Bible Schema Architecture
@@ -111,36 +196,28 @@ Biblical text interpretation follows strict linguistic hierarchy:
 **Policy database** (first time setup):
 ```bash
 # NEW: Automatically reads from schema/ and data/ directories
-python cli\init_policy.py --db compendium.sqlite
+python compendium.py init-policy
 
-# Or via main CLI
-python cli\study_bible_cli.py --init-policy --db compendium.sqlite
+# Or force re-initialization
+python compendium.py init-policy --force
 ```
 
-**Bible data database** (multi-step import):
+**Verse schema** (NEW unified system):
 ```bash
-# 1. Import Bible text (CSV format: book,chapter,verse,text)
-python cli\study_bible_compendium.py import-bible-csv \
-  --version-code BSB \
-  --version-name "Berean Study Bible" \
-  --language en \
-  --file berean.csv
+# 1. Create verses_normalized table
+python compendium.py init-schema
 
-# 2. Import Strong's lexicon (strongs_number,language,lemma,gloss,extra)
-python cli\study_bible_compendium.py import-strongs \
-  --language el \
-  --file data\strongs_greek.csv
+# 2. Import Bible translations (Excel/CSV with columns: book,chapter,verse,text)
+python compendium.py import-bible data/kjv.xlsx KJV
+python compendium.py import-bible data/bsb.csv BSB --overwrite
 
-# 3. Import interlinear tokens (verse_ref,word_index,language,surface,lemma,strongs_number,morph)
-python cli\study_bible_compendium.py import-interlinear --file interlinear.csv
+# 3. Build canonical verse spine (deduplication layer)
+python compendium.py build-spine
 
 # 4. Query and export
-python cli\study_bible_compendium.py search --query "faith" --version-code BSB --limit 50
-python cli\study_bible_compendium.py export-pdf \
-  --version-code BSB \
-  --book John \
-  --chapter 3 \
-  --outfile john3.pdf
+python compendium.py search "faith" --translation KJV --limit 50
+python compendium.py passage "John 3:16" --translations KJV BSB
+python compendium.py pdf-passage "John 3" output.pdf --translations KJV BSB
 ```
 
 ### Berean Bible Import Workflow
@@ -192,29 +269,30 @@ sqlite3 test.db "SELECT checksum, version FROM hermeneutical_policy WHERE id=1;"
 
 ### Policy System (`compendium.sqlite`)
 - **Schema**: `schema/hermeneutical_policy.sql` - Table definition + 3 locking triggers
-- **Policy text**: `data/policy_preface.txt` and `data/policy_body.txt` - Editable policy content
-- **Loader**: `cli/init_policy.py` - File-based policy initialization
-- **CLI integration**: `cli/study_bible_cli.py` - argparse setup and subcommand handling
-- **Reference**: `data/Study_Bible_Compendium_Hermeneutical_Rule_Policy.txt` - Human-readable full policy
+- **Policy source**: `CANON/HERMENEUTICAL_RULE_POLICY.md` - Canonical policy (SHA-256 locked)
+- **Policy lock**: `CANON/CANON_LOCK.md` - Git-level checksum verification
+- **Policy changelog**: `CANON/CANON_CHANGELOG.md` - Version history
+- **Database backup**: `data/policy_preface.txt` + `data/policy_body.txt`
+- **Loader**: `cli/init_policy.py` - Policy initialization tool
 
-### Bible Data Engine (`compendium.sqlite`)
-- **Main engine**: `cli/study_bible_compendium.py` - comprehensive schema with subcommands:
-  - `import-bible-csv` → multi-version text
-  - `import-strongs` → lexicon data
-  - `import-interlinear` → original language tokens
-  - `import-midrash` → study notes
-  - `search` → full-text verse search
-  - `export-pdf` → chapter PDF generation
-  - `export-midrash-pdf` → study report PDFs
+### Verse Schema (NEW - `verses_normalized`)
+- **Main CLI**: `compendium.py` - Unified entry point (uses `sbc/` package)
+- **Schema**: `schema/verse_schema.sql` - Flat verses_normalized table
+- **Spine schema**: `schema/canonical_verses.sql` - Deduplication layer
+- **Notes schema**: `schema/notes.sql` - Verse annotations
+- **Canon definition**: `data/canon.json` - 66-book Protestant canon (book_num, code, name)
+- **Package modules**: `sbc/*.py` - Core functionality (loader, search, parallel, pdfgen, etc.)
 
-### Berean Bible Tools (separate schema in `compendium.sqlite`)
-- **Importer**: `cli/import_berean.py` - creates `berean_verses`, `berean_words`, `berean_strongs` tables
-- **Query tool**: `cli/query_berean.py` - search by Strong's numbers or Greek words
-- **Cross-reference generator**: `cli/xref_berean.py` - find thematic connections via shared Strong's numbers
+### Legacy & Berean Bible Tools
+- **Legacy engine**: `cli/study_bible_compendium.py` - Hierarchical schema (317K verses)
+- **Berean importer**: `cli/import_berean.py` - NT Greek interlinear
+- **Berean query**: `cli/query_berean.py` - Strong's number search
+- **Cross-references**: `cli/xref_berean.py` - Shared Strong's number finder
 
 ### Utility Scripts
-- **PDF conversion**: `tools/batch_pdf_to_excel.py`, `tools/word_to_excel.py` - extract text/tables from PDFs
-- **Sample data**: `data/kjv_sample.xlsx`, `data/strongs_sample.xlsx` - CSV format examples
+- **PDF conversion**: `tools/batch_pdf_to_excel.py`, `tools/word_to_excel.py`
+- **Excel conversion**: `tools/convert_excel_to_csv.py`
+- **Sample data**: `data/kjv_sample.csv`, `data/test_sample.csv`
 - **Source materials**: `sources/pdf/` (reference PDFs), `sources/excel/` (Bible CSVs)
 
 ### Code Organization Pattern
@@ -306,20 +384,43 @@ The codebase structure suggests planned features:
 ```
 Study_Bible_Compendium/
 ├─ compendium.sqlite           # Single database (policy + Bible data)
+├─ compendium.py               # NEW unified CLI entry point
 ├─ cli/                        # All executable scripts
 │  ├─ init_policy.py           # Policy initialization (file-based)
-│  ├─ study_bible_cli.py       # Main CLI wrapper
-│  ├─ study_bible_compendium.py # Bible data engine
+│  ├─ study_bible_cli.py       # Legacy CLI wrapper
+│  ├─ study_bible_compendium.py # Legacy Bible data engine
 │  ├─ import_berean.py         # Berean Bible importer
 │  ├─ query_berean.py          # Strong's number search
 │  └─ xref_berean.py           # Cross-reference generator
+├─ sbc/                        # NEW core package (Python library)
+│  ├─ config.py                # Version constants
+│  ├─ paths.py                 # Path management
+│  ├─ db.py                    # Database connections
+│  ├─ util.py                  # Console output helpers
+│  ├─ model.py                 # Data models (Verse, Book)
+│  ├─ loader.py                # Bible import engine
+│  ├─ search.py                # Verse search
+│  ├─ context.py               # Context windows
+│  ├─ parallel.py              # Multi-translation views
+│  ├─ spine.py                 # Canonical verse spine
+│  ├─ pdfgen.py                # PDF report generation
+│  └─ status.py                # System health checks
 ├─ schema/                     # SQL schema definitions
-│  └─ hermeneutical_policy.sql # Policy table + triggers
+│  ├─ hermeneutical_policy.sql # Policy table + triggers
+│  ├─ verse_schema.sql         # verses_normalized table
+│  ├─ canonical_verses.sql     # Deduplication spine
+│  ├─ notes.sql                # Verse annotations
+│  └─ translations.sql         # Translation metadata
+├─ CANON/                      # NEW hermeneutical policy (locked)
+│  ├─ HERMENEUTICAL_RULE_POLICY.md  # Canonical policy
+│  ├─ CANON_LOCK.md            # SHA-256 checksum
+│  └─ CANON_CHANGELOG.md       # Version history
 ├─ data/                       # Policy text & reference data
 │  ├─ policy_preface.txt       # Editable preface
 │  ├─ policy_body.txt          # Editable policy rules
-│  ├─ kjv_sample.xlsx          # Sample Bible CSV
-│  └─ strongs_sample.xlsx      # Sample lexicon CSV
+│  ├─ canon.json               # 66-book Protestant canon
+│  ├─ kjv_sample.csv           # Sample Bible data
+│  └─ converted/               # Batch-converted CSVs
 ├─ sources/                    # Original source materials
 │  ├─ pdf/                     # Reference PDFs
 │  └─ excel/                   # Bible CSV sources
@@ -329,9 +430,17 @@ Study_Bible_Compendium/
 ├─ tools/                      # Conversion utilities
 │  ├─ batch_pdf_to_excel.py
 │  ├─ word_to_excel.py
-│  └─ convert_single_pdf_retry.py
+│  └─ convert_excel_to_csv.py
+├─ TOOLS/                      # NEW scripts for maintenance
+│  └─ scripts/
+│     └─ canon_lock.py         # Regenerate CANON_LOCK.md
 ├─ docs/                       # Documentation
-│  └─ DEV_HANDOFF_Phase_Policy_and_Structure.md
+│  ├─ SCHEMA_ARCHITECTURE.md   # Database schema design
+│  ├─ DEV_HANDOFF_Phase_Policy_and_Structure.md
+│  └─ PHASE_COMPLETE_Verse_Schema.md
+├─ STUDIES/                    # Scriptural studies (governed by CANON)
+│  ├─ word-studies/
+│  └─ typology/
 ├─ .github/
 │  └─ copilot-instructions.md  # This file
 └─ workspace.code-workspace
@@ -352,6 +461,12 @@ Bible Data DB (compendium.sqlite)
 │   ├── interlinear_tokens (word-level original language)
 │   ├── midrash_sources → midrash_notes
 │   └── user_notes, crossrefs
+│
+├── Normalized Schema (NEW - compendium.py via sbc/)
+│   ├── verses_normalized (flat, multi-translation)
+│   ├── canonical_verses (spine: one row per verse across translations)
+│   ├── notes (attached to verse_id from spine)
+│   └── translations (metadata for loaded Bibles)
 │
 └── Berean Schema (import_berean.py)
     ├── berean_verses (multi-translation: BGB, BIB, BLB, BSB)

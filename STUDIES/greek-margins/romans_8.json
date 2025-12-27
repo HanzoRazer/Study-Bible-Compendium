@@ -1,0 +1,187 @@
+{
+  "unit_id": "SANCT_CORE_ROM_008_018_030",
+  "passage": "Romans 8:18-30",
+  "testament": "NT",
+  "annotations": [
+    {
+      "verse_ref": "Romans 8:18",
+      "sort_order": 10,
+      "lemma_greek": "λογίζομαι",
+      "translit": "logizomai",
+      "morph": "present middle indicative",
+      "gloss": "reckon / consider",
+      "note_md": "Settled evaluation (not mood): Paul weighs suffering against coming glory."
+    },
+    {
+      "verse_ref": "Romans 8:19",
+      "sort_order": 20,
+      "lemma_greek": "ἀπεκδέχομαι",
+      "translit": "apekdechomai",
+      "morph": "present middle indicative",
+      "gloss": "wait eagerly",
+      "note_md": "Strained anticipation: creation leans forward toward the revealing of sons."
+    },
+    {
+      "verse_ref": "Romans 8:20",
+      "sort_order": 30,
+      "lemma_greek": "ὑποτάσσω",
+      "translit": "hypotasso",
+      "morph": "aorist passive indicative",
+      "gloss": "subject / place under",
+      "note_md": "Creation \"was subjected\" (passive): imposed condition, not voluntary."
+    },
+    {
+      "verse_ref": "Romans 8:21",
+      "sort_order": 40,
+      "lemma_greek": "ἐλευθερόω",
+      "translit": "eleutheroo",
+      "morph": "future passive indicative",
+      "gloss": "set free / liberate",
+      "note_md": "Future liberation: the created order participates in the children's freedom."
+    },
+    {
+      "verse_ref": "Romans 8:22",
+      "sort_order": 50,
+      "lemma_greek": "συστενάζω",
+      "translit": "systenazo",
+      "morph": "present active indicative",
+      "gloss": "groan together",
+      "note_md": "Corporate groaning: creation shares one laboring ache."
+    },
+    {
+      "verse_ref": "Romans 8:23",
+      "sort_order": 60,
+      "lemma_greek": "ἀπεκδέχομαι",
+      "translit": "apekdechomai",
+      "morph": "present middle participle",
+      "gloss": "await eagerly",
+      "note_md": "Believers share creation's posture—eager waiting for bodily redemption."
+    },
+    {
+      "verse_ref": "Romans 8:24",
+      "sort_order": 70,
+      "lemma_greek": "σῴζω",
+      "translit": "sozo",
+      "morph": "aorist passive indicative",
+      "gloss": "save / rescue",
+      "note_md": "Decisive saving act, with ongoing hope for completion."
+    },
+    {
+      "verse_ref": "Romans 8:25",
+      "sort_order": 80,
+      "lemma_greek": "ἀπεκδέχομαι",
+      "translit": "apekdechomai",
+      "morph": "present middle indicative",
+      "gloss": "wait eagerly",
+      "note_md": "Present tense: hope keeps waiting active, not idle."
+    },
+    {
+      "verse_ref": "Romans 8:26",
+      "sort_order": 86,
+      "lemma_greek": "Ὡσαύτως δὲ καὶ",
+      "translit": "hōsautōs de kai",
+      "morph": "Adv + Conj + Conj",
+      "gloss": "likewise / now / also",
+      "note_md": "Links Spirit-help to the prior groaning/waiting context (vv.23–25): not only we groan—**the Spirit also** enters the tension."
+    },
+    {
+      "verse_ref": "Romans 8:26",
+      "sort_order": 87,
+      "lemma_greek": "τὸ Πνεῦμα",
+      "translit": "to pneuma",
+      "morph": "Art-NNS + N-NNS",
+      "gloss": "the Spirit",
+      "note_md": "Holy Spirit (context). Neuter grammar, personal agency."
+    },
+    {
+      "verse_ref": "Romans 8:26",
+      "sort_order": 88,
+      "lemma_greek": "συναντιλαμβάνεται τῇ ἀσθενείᾳ ἡμῶν",
+      "translit": "synantilambanetai tē astheneia hēmōn",
+      "morph": "V-Pres Ind Mid 3S + Art-DFS + N-DFS + Gen-1P",
+      "gloss": "takes hold together with our weakness",
+      "note_md": "Not \"helps from afar\"—**co-lifts**. Dative: help operates *in the sphere of* our weakness (especially prayer)."
+    },
+    {
+      "verse_ref": "Romans 8:26",
+      "sort_order": 90,
+      "lemma_greek": "συναντιλαμβάνομαι",
+      "translit": "synantilambanomai",
+      "morph": "present middle indicative",
+      "gloss": "take hold together with",
+      "note_md": "The Spirit joins the burden; He does not merely observe or replace the believer."
+    },
+    {
+      "verse_ref": "Romans 8:26",
+      "sort_order": 95,
+      "lemma_greek": "ὑπερεντυγχάνω",
+      "translit": "hyperentynchano",
+      "morph": "present active indicative",
+      "gloss": "intercede on behalf of",
+      "note_md": "Advocacy language: Spirit-formed petition where words fail."
+    },
+    {
+      "verse_ref": "Romans 8:27",
+      "sort_order": 100,
+      "lemma_greek": "ἐντυγχάνω",
+      "translit": "entynchano",
+      "morph": "present active indicative",
+      "gloss": "appeal / petition",
+      "note_md": "Intercession \"according to God\" (aligned to divine will, not human guesswork)."
+    },
+    {
+      "verse_ref": "Romans 8:28",
+      "sort_order": 110,
+      "lemma_greek": "συνεργέω",
+      "translit": "synergeo",
+      "morph": "present active indicative",
+      "gloss": "work together",
+      "note_md": "Providence is collaborative convergence: events are not isolated."
+    },
+    {
+      "verse_ref": "Romans 8:29",
+      "sort_order": 120,
+      "lemma_greek": "προγινώσκω",
+      "translit": "proginosko",
+      "morph": "aorist active indicative",
+      "gloss": "know beforehand",
+      "note_md": "Relational knowing that precedes purpose and calling."
+    },
+    {
+      "verse_ref": "Romans 8:29",
+      "sort_order": 125,
+      "lemma_greek": "προορίζω",
+      "translit": "proorizo",
+      "morph": "aorist active indicative",
+      "gloss": "predestine / mark out",
+      "note_md": "Goal-oriented: conformed to the Son's image (sanctification's destination)."
+    },
+    {
+      "verse_ref": "Romans 8:30",
+      "sort_order": 130,
+      "lemma_greek": "καλέω",
+      "translit": "kaleo",
+      "morph": "aorist active indicative",
+      "gloss": "call",
+      "note_md": "Aorist sequence: God's action presented as decisive and sure."
+    },
+    {
+      "verse_ref": "Romans 8:30",
+      "sort_order": 135,
+      "lemma_greek": "δικαιόω",
+      "translit": "dikaioo",
+      "morph": "aorist active indicative",
+      "gloss": "justify",
+      "note_md": "Declared righteous—grounds the sanctifying transformation."
+    },
+    {
+      "verse_ref": "Romans 8:30",
+      "sort_order": 140,
+      "lemma_greek": "δοξάζω",
+      "translit": "doxazo",
+      "morph": "aorist active indicative",
+      "gloss": "glorify",
+      "note_md": "Spoken as completed: certainty of God's finishing work."
+    }
+  ]
+}
